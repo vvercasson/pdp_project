@@ -1,6 +1,6 @@
 # Generic Content Analysis
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vincentpmartin/generic.content.analysis/HEAD?labpath=jupyter_notebook_generic_content_analysis.ipynb) 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/vvercasson/pdp_project/HEAD?labpath=jupyter_notebook_generic_content_analysis.ipynb) 
 [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-nc-sa/4.0/)
 
 This work is licensed under a
@@ -13,7 +13,7 @@ What evaluate obstructive sleep apnea patient-based screening questionnaires? A 
 
 * Gauld C, Martin VP, Richaud A, Bailleul S, Lucie V, Perromat JL, Zreik I, Taillard J, Geoffroy PA, Lopez R, Micoulaud-Franchi JA. Systematic Item Content and Overlap Analysis of Self-reported Multiple Sleep Disorders Screening Questionnaires in Adults. *Journal of Clinical Medicine*. [https://doi.org/10.3390/jcm12030852](https://doi.org/10.3390/jcm12030852) 
 
-Furthermore, to give the community a useful tool that can be used by any clinicians without any knowledge of coding, we set up a 👉[Binder repository](https://mybinder.org/v2/gh/vincentpmartin/generic.content.analysis/HEAD?labpath=jupyter_notebook_generic_content_analysis.ipynb)👈, guiding the reader to run the code in a fully online environemnent. This code does not limit to Sleep content analysis and can be ran on any dataset formatted the following way.
+Furthermore, to give the community a useful tool that can be used by any clinicians without any knowledge of coding, we set up a 👉[Binder repository](https://mybinder.org/v2/gh/vvercasson/pdp_project/HEAD?labpath=jupyter_notebook_generic_content_analysis.ipynb)👈, guiding the reader to run the code in a fully online environemnent. This code does not limit to Sleep content analysis and can be ran on any dataset formatted the following way.
 
 
 ## File formatting
@@ -45,7 +45,7 @@ Example :
 
 * If you are are familiar with Jupyter Notebooks, just download the notebook and the excel file, and *voila*.
 
-* If you do not even know what a Jupyer Notebook is, please click on 👉[this link](https://mybinder.org/v2/gh/vincentpmartin/generic.content.analysis/main?labpath=jupyter_notebook_generic_content_analysis.ipynb)👈, wait a few second for the binder server to launch, and follows the instructions in the notebook. 
+* If you do not even know what a Jupyer Notebook is, please click on 👉[this link](https://mybinder.org/v2/gh/vvercasson/pdp_project/HEAD?labpath=jupyter_notebook_generic_content_analysis.ipynb)👈, wait a few second for the binder server to launch, and follows the instructions in the notebook. 
 
 ## Contact
 If you have trouble reproducing our results or launching the code on your own data, do not hesitate to contact us !
