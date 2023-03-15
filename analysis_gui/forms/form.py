@@ -3,7 +3,7 @@ from ..util.chainable import Chainable
 
 class Form(VBox, Chainable):
     
-    def __init__(self, output=Output(width="fit-content"), layout=Layout()):
+    def __init__(self, output=Output(), layout=Layout()):
         VBox.__init__(
             self,
             layout=layout

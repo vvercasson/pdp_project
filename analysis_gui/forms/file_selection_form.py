@@ -7,7 +7,8 @@ class FileSelectionForm(Form):
     TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     
     def __init__(self): 
-        Form.__init__(self,
+        super().__init__(
+            output=Output(width="fit-content"),
             layout= Layout(
                 width="100%",
                 grid_gap="10px"
@@ -15,8 +16,8 @@ class FileSelectionForm(Form):
         )
         
         self.dropdown = Dropdown(
-            options=["Fried2017", "Gauld2023_sleep_content_analysis", "Custom"],
-            value="Gauld2023_sleep_content_analysis",
+            options=["Fried2017", "Gauld2023_OSAS_content_analysis", "Gauld2023_sleep_content_analysis", "Custom"],
+            value="Gauld2023_OSAS_content_analysis",
             description="Expérience",
             disabled=False
         )
@@ -69,14 +70,21 @@ class FileSelectionForm(Form):
         common.experiment = self.dropdown.value
         if common.experiment == "Fried2017" : 
             common.df = pd.read_excel("./data/fried2017_reformatted.xlsx") # reproduction of the seminal paper of Fried et al. https://doi.org/10.1016/j.jad.2016.10.019
+            common.references = []
+            
         elif common.experiment=="Gauld2023_sleep_content_analysis" : 
             common.df = pd.read_excel("./data/gauld2023_sleep_content_analysis_processed.xlsx")
             common.references = ['ICSD', 'DSM']
+            
+        elif common.experiment=="Gauld2023_OSAS_content_analysis" : 
+            common.df = pd.read_excel("./data/gauld2023_OSAS_data_processed.xlsx")
+            common.references = []
+            
         else :
             file = self.filepicker.value[0].content
             common.df = pd.read_excel(io.BytesIO(file))
 
-        common.df.rename(columns={common.df.columns[0]: "Category", common.df.columns[1]: "Ab", common.df.columns[2]: "Symptom"}, inplace=True) #replacing the name of the three first columns !
+        common.df.rename(columns={common.df.columns[0]: "Category",common.df.columns[1]: "Subcategory", common.df.columns[2]: "Ab", common.df.columns[3]: "Symptom"}, inplace=True) #replacing the name of the three first columns !
         common.df.sort_values(by="Ab",inplace = True) # sort the dataset by abbreviation
         with self._output:
             self._output.clear_output(wait=True)
