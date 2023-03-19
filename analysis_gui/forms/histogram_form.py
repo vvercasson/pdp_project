@@ -32,6 +32,7 @@ class HistogramUI(FigureForm):
         )
         
     def init(self):
+        self._name = "histo"
         self._output = interactive_output(self.update, {'palette': self._colorPicker, "sortBy": self._sortBy})
         self._output.layout.width = "100%"
         children = [

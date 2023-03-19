@@ -30,6 +30,7 @@ class CircleForm(FigureForm):
         )
 
     def init(self):
+        self._name = "circle"
         self._output = interactive_output(self.update, {'max_radius': self.intslider})
         self._output.layout.width = "fit-content"
         

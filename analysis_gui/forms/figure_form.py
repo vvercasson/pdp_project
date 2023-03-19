@@ -11,6 +11,7 @@ class FigureForm(Form):
     def __init__(self, output, layout):
         super().__init__(output, layout)
         
+        self._name = None
         self._figure = None
         self._dialog = Output()
         with open("resources/loading.gif", 'rb') as img:
@@ -68,7 +69,11 @@ class FigureForm(Form):
             fileuri = ''
             self._loading.layout.visibility = 'visible'
             try:
-                image = pio.to_image(self._figure, extension, width=1440, height=600)
+                if(self._name == "cicle"):
+                    width = 800
+                else:
+                    width = 1440
+                image = pio.to_image(self._figure, extension, width, height=600)
             except Exception as e:
                 message = f'{e}'
             finally:
