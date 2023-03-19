@@ -9,7 +9,7 @@ class CircleForm(FigureForm):
         self.intslider = IntSlider(
             value=20,
             min=6,
-            max=200,
+            max=50,
             step=1,
             description='Max Radius :',
             disabled=False,
