@@ -69,7 +69,8 @@ class FigureForm(Form):
             fileuri = ''
             self._loading.layout.visibility = 'visible'
             try:
-                if(self._name == "cicle"):
+                width = 0
+                if(self._name == "circle"):
                     width = 800
                 else:
                     width = 1440
