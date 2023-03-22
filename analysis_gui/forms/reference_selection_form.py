@@ -60,7 +60,7 @@ class ReferenceSelectionForm(Form):
         for i in self.checkBoxes:
             if i.value:
                 selected_options.append(i.description)
-        common.header.extend(selected_options)
+        common.references.extend(selected_options)
         # print(common.header)
         sums = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 0) # sum of the number of symptom by questionnaire
         common.col = list(sums.sort_values(ascending=False).index.to_numpy()) #we create the list of columns
