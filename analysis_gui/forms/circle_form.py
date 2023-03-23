@@ -6,14 +6,14 @@ from ipywidgets import IntSlider
 class CircleForm(FigureForm):
     
     def __init__(self):     
-        self.intslider = IntSlider(
+        self._max_radius = IntSlider(
             value=20,
             min=6,
             max=50,
             step=1,
             description='Max Radius :',
             disabled=False,
-            continuous_update=False,
+            continuous_update=True,
             orientation='horizontal',
             readout=True,
             readout_format='d'
@@ -30,31 +30,33 @@ class CircleForm(FigureForm):
         )
 
     def init(self):
-        self._name = "circle"
-        self._output = interactive_output(self.update, {'max_radius': self.intslider})
-        self._output.layout.width = "fit-content"
-        
+        if self._figure is None:
+            self._max_radius.observe(self._update_radius, names=["value"])
+        self._init_circle()
         children=[
             HBox(
-                children=[self.intslider],
+                children=[self._max_radius],
                 layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
-            ),
-            self._output
+            )
         ]
         
         self._show_interface(children)
+        
+    def _update_radius(self, radius):
+        self._figure.update_layout(
+            polar = dict(
+                radialaxis=dict(range=[0, radius["new"]])
+            )
+        )
 
-    def getForm(self):
-        return self._layout
-    
-    def update(self, max_radius):
+    def _init_circle(self):
         df_col = common.df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=common.col).copy()
         df_col.head()
-        min_radius = self.intslider.min
+        min_radius = self._max_radius.min
 
         # dictionnary questionnaire <->  radius of the circles
         dic = {}
-        i = max_radius
+        i = self._max_radius.value
         for scale in df_col.variable.unique() : 
             dic[scale] = i
             i-=1
@@ -73,8 +75,7 @@ class CircleForm(FigureForm):
         ###
         # FIGURE
         ###
-
-        self._figure = go.Figure()
+        self._figure = go.FigureWidget()
         # transparency plot with all the symptoms to set their order in the plot
         self._figure.add_trace(go.Scatterpolar(
                     r = [0 for k in range(len(common.df.index))], # list of radiuses
@@ -126,7 +127,7 @@ class CircleForm(FigureForm):
                     line=dict(
                         color=dic_color[scale], # color of the line
                         width=1, # width of the line
-                 ))
+                ))
             ))
             i+=1
 
@@ -138,14 +139,13 @@ class CircleForm(FigureForm):
             fillcolor = "white", # color of the circle
             showlegend = False, # no legend
             line=dict(
-            color="white",
-            width=0, # no line
-                ))
+                    color="white",
+                    width=0, # no line
+                )
+            )
         )
 
-
         ### Set options common to all traces with self._figure.update_traces
-
         self._figure.update_polars(bgcolor='white')
         self._figure.update_layout(
             autosize=True, # to allow or not autosize
@@ -153,17 +153,17 @@ class CircleForm(FigureForm):
             height=500, # height of the figure
             paper_bgcolor = 'rgba(0,0,0,0)', plot_bgcolor= 'rgba(0,0,0,0)',# background color
             polar = dict( #options for the polar plot
-                  radialaxis = dict(visible = True, # allowing radius lines  
+                radialaxis = dict(visible = True, # allowing radius lines  
                                     color="lightgrey", # color of the lines
                                     gridcolor = "lightgrey", # color of the grid
                                     linecolor="lightgrey", #color of the lines
                                     gridwidth = 1, # step in the grid
-                                    range=[0, max_radius+1], # range of the grid
+                                    range=[0, self._max_radius.value+1], # range of the grid
                                     dtick=1, # step in the grid
                                     showgrid =True, # showing the grid
                                     layer="below traces", # put the grid below traces
                                     tickfont_color ='rgba(0,0,0,0)'),# putting tickfont into white to make them disappear
-                  angularaxis = dict(
+                angularaxis = dict(
                 gridcolor = "lightgrey", # color of the angular grid
                 tickfont_size=7, # font size of labels (ex. "S01")
                 rotation=90, # start position of angular axis 
@@ -171,5 +171,3 @@ class CircleForm(FigureForm):
                 )),
                 legend = dict(font = dict(size = 10, color = "black")) # size and color of the legend
         )
-        
-        self._figure.show() # showing figure

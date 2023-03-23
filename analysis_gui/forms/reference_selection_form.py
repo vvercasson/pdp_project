@@ -69,6 +69,7 @@ class ReferenceSelectionForm(Form):
         common.df = common.df.loc[:, common.col]
         self._output.clear_output(wait=True)
         with self._output:
+            self._output.clear_output()
             display(common.df.head())
         common.df['sum_symptoms'] = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
         common.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)

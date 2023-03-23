@@ -8,9 +8,9 @@ import pandas as pd
 
 from ipywidgets import Layout, FileUpload, Button, \
     Box, VBox, HBox, Dropdown, Output, interactive_output, \
-    Text, Image, Label
+    Text, Image, Label, HTML
     
-from IPython.display import display
+from IPython.display import display, display_html
 from itertools import cycle
 
 import io, inspect
