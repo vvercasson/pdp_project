@@ -8,17 +8,16 @@ from IPython.display import Javascript
 from .common import *
 
 class FigureForm(Form, Saveable):
-    
     def __init__(self, output, layout):
         super().__init__(output, layout)
         
         self._name = None
         self._figure = None
         self._dialog = Output()
+        self._dialog.layout.width = '100%'
         with open("resources/loading.gif", 'rb') as img:
             gif = img.read()
         self._loading = Image(value=gif, layout=Layout(width="15px", height="15px", visibility="hidden"))
-        
         self._save_button = Button(
             description="Save",
             icon="save",
@@ -42,11 +41,12 @@ class FigureForm(Form, Saveable):
                 grid_gap="10px"
             )
         )
-        
-    def _show_interface(self, other):
         self._save_button.on_click(self._save)
         self._fileName.observe(self._onFileNameChange, names=['value'])
-        
+
+    def _show_interface(self, other):
+        self._dialog.clear_output()
+        self._fileName.value = ''
         self.children = other + [self._figure] + [self._save_interface]
         
     def _onFileNameChange(self, change):
@@ -56,6 +56,7 @@ class FigureForm(Form, Saveable):
             self._save_button.disabled = False      
     
     def _save(self, _):
+        # print("being called by ", inspect.stack())
         if self._figure != None:
             filename = self._fileName.value
             if filename == '':
@@ -69,7 +70,7 @@ class FigureForm(Form, Saveable):
             fileuri = ''
             self._loading.layout.visibility = 'visible'
             try:
-                image = pio.to_image(self._figure, extension)
+                image = self._figure.to_image(extension, width=self._figure.layout.width, height=self._figure.layout.height)
             except Exception as e:
                 message = f'{e}'
             finally:

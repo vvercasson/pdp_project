@@ -1,7 +1,7 @@
 from typing import overload
 
 class Saveable():
-    
+
     @overload
     def _save(self, _):
         pass
@@ -97,7 +97,6 @@ class Saveable():
         dialog.showModal();
 
         function closeDialog() {{
-            dialog.close();
             var e = dialog.closest(".jp-OutputArea");
             if (e !== null) {{
                 e.replaceChildren();

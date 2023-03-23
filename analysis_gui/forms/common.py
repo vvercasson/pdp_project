@@ -10,7 +10,7 @@ from ipywidgets import Layout, FileUpload, Button, \
     Box, VBox, HBox, Dropdown, Output, interactive_output, \
     Text, Image, Label, HTML
     
-from IPython.display import display, display_html
+from IPython.display import display, clear_output
 from itertools import cycle
 
 import io, inspect

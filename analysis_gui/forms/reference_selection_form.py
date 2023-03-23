@@ -30,11 +30,11 @@ class ReferenceSelectionForm(Form):
     
     def init(self):
         self.checkBoxes = []
-        
         listRef = (ref for ref in list(common.df.columns) if ref not in common.header)
         for ref in listRef:
             newCheckBox = self.createCheckbox(ref, ref in common.references)
             self.checkBoxes.append(newCheckBox)
+            
         self._output.clear_output()
         self.children = [
             GridBox(
@@ -43,7 +43,6 @@ class ReferenceSelectionForm(Form):
             HBox(
                 children=[self.buttonGenerate],
                 layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
-
             ),
             self._output
         ]
@@ -69,7 +68,7 @@ class ReferenceSelectionForm(Form):
         common.df = common.df.loc[:, common.col]
         self._output.clear_output(wait=True)
         with self._output:
-            self._output.clear_output()
+            clear_output()
             display(common.df.head())
         common.df['sum_symptoms'] = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
         common.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)

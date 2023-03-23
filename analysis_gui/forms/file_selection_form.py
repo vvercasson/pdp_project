@@ -86,6 +86,6 @@ class FileSelectionForm(Form):
         common.df.sort_values(by="Ab",inplace = True) # sort the dataset by abbreviation
         
         with self._output:
-            self._output.clear_output()
+            clear_output()
             display(common.df.head()) # print the 5 first rows
         self.executeNext()

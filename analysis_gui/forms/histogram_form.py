@@ -18,7 +18,7 @@ class HistogramUI(FigureForm):
             options=[name for name, body 
                      in inspect.getmembers(px.colors.qualitative)
                      if isinstance(body, list) and name != "__all__" and not name.endswith("_r")],
-            value='D3',
+            value='Pastel',
             description="Color Palette",
             disabled=False
         )
@@ -31,19 +31,15 @@ class HistogramUI(FigureForm):
             tooltips=['Sort by number of occurences', 'Sort by category and by occurences'],
             layout=Layout(display='flex', flex_flow="row", grid_gap="5px")
         )
+        self._sortBy.observe(self._sort_by, names=["value"])
+        self._colorPicker.observe(self._change_color_palette, names=["value"])
         
     def init(self):
         self._df_questionnaires = common.df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])
-            
         if common.df.shape[0] != common.df['Category'].isnull().sum(): 
             self._color = 'Category'
         else: 
             self._color = 'sum_symptoms'
-            
-        if self._figure is None and common.df.shape[0] != common.df['Category'].isnull().sum():
-            self._sortBy.observe(self._sort_by, names=["value"])
-            self._colorPicker.observe(self._change_color_palette, names=["value"])
-        else :
             self._sortBy.disabled = True
             self._colorPicker.disabled = True
             
@@ -79,4 +75,3 @@ class HistogramUI(FigureForm):
         colors = cycle(self._palettes.get(palette["new"]))
         for bar in self._figure.data:
             bar.update(marker={'color' : next(colors)})
-        pass   
