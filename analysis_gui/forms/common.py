@@ -5,6 +5,7 @@ references = []
 col = []
 cat_per_questionnaire = None
 jaccard_table = None
+jaccard = None
 
 import pandas as pd
 

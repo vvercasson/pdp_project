@@ -10,3 +10,5 @@ from .ref_display import RefDisplayUI
 from .num_symptoms_category import NumSymCat
 from .jaccard_table import JaccardTable
 from .sunburst_form import SunburstForm
+from .jaccard_heatmap import JaccardHeatmap
+from .average_jacc_index import AverageJaccardIndex
