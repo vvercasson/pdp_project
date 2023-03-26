@@ -26,11 +26,15 @@ class DistributionUI(FigureForm):
                 width=800,
                 height=400
                 )
-            #fig.write_image("figure3_heatmap.pdf") # writing the figure in a file
+            
+            self._show_interface([])
+            # fig.write_image("figure3_heatmap.pdf") # writing the figure in a file
             #fig.show() # showing the figure
         else: 
-            print('No category in this dataframe !')
+            self.children = [self._output]
+            with self._output:
+                clear_output()
+                print('No category in this dataframe !')
             
-        self._show_interface([])
             
             
