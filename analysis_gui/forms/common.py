@@ -17,3 +17,5 @@ from itertools import cycle
 import io, inspect
 import plotly.express as px
 import plotly.graph_objects as go
+
+melt_output=Output()

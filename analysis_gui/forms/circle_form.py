@@ -58,7 +58,9 @@ class CircleForm(FigureForm):
 
     def _init_circle(self):
         df_col = common.df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=common.col).copy()
-        df_col.head()
+        with common.melt_output:
+            clear_output()
+            display(df_col.head())
         min_radius = self._max_radius.min
 
         # dictionnary questionnaire <->  radius of the circles
