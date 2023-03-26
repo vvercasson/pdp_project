@@ -3,6 +3,7 @@ experiment = ""
 header = ['Category','Subcategory', 'Ab', 'Symptom']
 references = []
 col = []
+cat_per_questionnaire = None
 
 import pandas as pd
 

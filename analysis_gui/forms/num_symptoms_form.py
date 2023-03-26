@@ -1,7 +1,6 @@
 from .form import Form
 from .common import *
 from . import common
-from ipywidgets import ToggleButtons
 import numpy as np
 
 class NumSymptomsUI(Form):

@@ -5,3 +5,6 @@ from .histogram_form import HistogramUI
 from .reference_selection_form import ReferenceSelectionForm
 from .circle_form import CircleForm
 from .num_symptoms_form import NumSymptomsUI
+from .distribution_form import DistributionUI
+from .ref_display import RefDisplayUI
+from .num_symptoms_category import NumSymCat
