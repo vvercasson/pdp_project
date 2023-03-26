@@ -6,6 +6,7 @@ col = []
 cat_per_questionnaire = None
 jaccard_table = None
 jaccard = None
+sympt_per_questionnaire = None
 
 import pandas as pd
 import numpy as np

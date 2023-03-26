@@ -1,7 +1,6 @@
 from .common import *
 from . import common
 from .figure_form import FigureForm
-import numpy as np
 import plotly.express as px
 from sklearn.preprocessing import normalize
 

@@ -1,7 +1,6 @@
 from .form import Form
 from .common import *
 from . import common
-import numpy as np
 
 class NumSymCat(Form):
     def __init__(self):

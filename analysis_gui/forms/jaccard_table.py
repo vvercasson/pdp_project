@@ -1,7 +1,6 @@
 from .common import *
 from . import common
 from .figure_form import FigureForm
-import numpy as np
 from sklearn.metrics import jaccard_score
 
 class JaccardTable(FigureForm):

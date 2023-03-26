@@ -1,7 +1,6 @@
 from .common import *
 from . import common
 from .figure_form import Form
-import numpy as np
 
 class AverageJaccardIndex(Form):
     def __init__(self):
