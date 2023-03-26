@@ -24,9 +24,6 @@ class ReferenceSelectionForm(Form):
         )
         self.buttonGenerate.on_click(self.generateFigures)
         
-        # Ne fait rien ?
-        # with self.output:
-        #     display(self.tab)
     
     def init(self):
         self.checkBoxes = []
@@ -57,7 +54,7 @@ class ReferenceSelectionForm(Form):
     def generateFigures(self, _):
         selected_options = []
         for i in self.checkBoxes:
-            if i.value:
+            if i.value and not i.description in common.references:
                 selected_options.append(i.description)
         common.references.extend(selected_options)
         # print(common.header)

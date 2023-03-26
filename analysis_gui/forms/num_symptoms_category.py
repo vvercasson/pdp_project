@@ -19,6 +19,7 @@ class NumSymCat(Form):
         self.children = [self._output]
         
         with self._output:
+            clear_output()
             # number of categories/questionnaire
             if common.df.shape[0] != common.df['Category'].isnull().sum() : 
                 common.cat_per_questionnaire = pd.DataFrame(np.zeros((common.df.shape[1]-5,len(common.df.Category.unique()))), index = common.df.iloc[:,4:-1].columns, columns = common.df.sort_values(by="Ab").Category.unique())
