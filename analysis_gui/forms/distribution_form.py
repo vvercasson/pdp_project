@@ -14,12 +14,13 @@ class DistributionUI(FigureForm):
         
     def init(self):
         if common.df.shape[0] != common.df['Category'].isnull().sum() : 
-            self._figure = px.imshow(pd.DataFrame(np.round(normalize(common.cat_per_questionnaire,norm='l1').T*100,1), # for printing text, we round the percentages to 1 decimal
+            fig = px.imshow(pd.DataFrame(np.round(normalize(common.cat_per_questionnaire,norm='l1').T*100,1), # for printing text, we round the percentages to 1 decimal
                                         columns = common.cat_per_questionnaire.index,
                                         index= common.cat_per_questionnaire.columns),
                             text_auto=True, # add the text
                             color_continuous_scale= 'Portland'# more color palettes available here : https://plotly.com/python/builtin-colorscales/
             )
+            self._figure = go.FigureWidget(fig)
             self._figure.update_xaxes(side="top") # xaxis on top of the figure
             self._figure.update_layout(
                 autosize=False,
