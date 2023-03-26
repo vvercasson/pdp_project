@@ -28,10 +28,38 @@ class CircleForm(FigureForm):
                 overflow="visible"
             )
         )
+        
+        self._figure_width = IntSlider(
+            value=5,
+            min=1,
+            max=10,
+            step=1,
+            description='Width :',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+        
+        self._figure_height = IntSlider(
+            value=5,
+            min=1,
+            max=10,
+            step=1,
+            description='Height :',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
 
     def init(self):
         if self._figure is None:
             self._max_radius.observe(self._update_radius, names=["value"])
+            self._figure_width.observe(self._update_size_width, names=["value"])
+            self._figure_height.observe(self._update_size_height, names=["value"])
         self._init_circle()
         children=[
             HBox(

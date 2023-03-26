@@ -31,8 +31,38 @@ class HistogramUI(FigureForm):
             tooltips=['Sort by number of occurences', 'Sort by category and by occurences'],
             layout=Layout(display='flex', flex_flow="row", grid_gap="5px")
         )
+        
+        self._figure_width = IntSlider(
+            value=5,
+            min=1,
+            max=10,
+            step=1,
+            description='Width :',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+        
+        self._figure_height = IntSlider(
+            value=5,
+            min=1,
+            max=10,
+            step=1,
+            description='Height :',
+            disabled=False,
+            continuous_update=False,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+
+        
         self._sortBy.observe(self._sort_by, names=["value"])
         self._colorPicker.observe(self._change_color_palette, names=["value"])
+        self._figure_width.observe(self._update_size_width, names=["value"])
+        self._figure_height.observe(self._update_size_height, names=["value"])
         
     def init(self):
         self._df_questionnaires = common.df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])

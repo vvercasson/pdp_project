@@ -13,6 +13,8 @@ class FigureForm(Form, Saveable):
         
         self._name = None
         self._figure = None
+        self._figure_height = None
+        self._figure_width = None
         self._dialog = Output()
         self._dialog.layout.width = '100%'
         with open("resources/loading.gif", 'rb') as img:
@@ -32,6 +34,7 @@ class FigureForm(Form, Saveable):
             tooltip="Supported formats: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'eps', 'json']"
         )
         
+        
         self._save_interface = HBox(
             children=[self._fileName, self._save_button, self._loading, self._dialog],
             layout=Layout(
@@ -41,13 +44,18 @@ class FigureForm(Form, Saveable):
                 grid_gap="10px"
             )
         )
+        
         self._save_button.on_click(self._save)
         self._fileName.observe(self._onFileNameChange, names=['value'])
 
     def _show_interface(self, other):
+        self._box__figure_sliderSize = HBox(
+            children =[self._figure_height, self._figure_width],
+            layout=Layout(justify_content="flex-start", grid_gap="10px", width="100%")
+        )
         self._dialog.clear_output()
         self._fileName.value = ''
-        self.children = other + [self._figure] + [self._save_interface]
+        self.children = other + [self._box__figure_sliderSize] + [self._figure] + [self._save_interface]
         
     def _onFileNameChange(self, change):
         if change['new'] == '':
@@ -55,6 +63,20 @@ class FigureForm(Form, Saveable):
         else:
             self._save_button.disabled = False      
     
+    
+    def _update_size_height(self, height):
+        newHeight = 500 + height.new*2
+        self._figure.update_layout(
+        autosize=False,
+        height=newHeight)
+        
+    def _update_size_width(self, width):
+        newWidth = 500 + width.new*2
+        self._figure.update_layout(
+        autosize=False,
+        width=newWidth)
+        
+        
     def _save(self, _):
         # print("being called by ", inspect.stack())
         if self._figure != None:
