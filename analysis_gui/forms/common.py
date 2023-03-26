@@ -4,6 +4,7 @@ header = ['Category','Subcategory', 'Ab', 'Symptom']
 references = []
 col = []
 cat_per_questionnaire = None
+jaccard_table = None
 
 import pandas as pd
 
