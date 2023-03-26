@@ -45,14 +45,42 @@ class FigureForm(Form, Saveable):
             )
         )
         
+        self._figure_height = IntSlider(
+            value=500,
+            min=300,
+            max=1280,
+            step=1,
+            description='Height :',
+            disabled=False,
+            continuous_update=True,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+        
+        self._figure_width = IntSlider(
+            value=500,
+            min=300,
+            max=1280,
+            step=1,
+            description='Width :',
+            disabled=False,
+            continuous_update=True,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
+        
         self._save_button.on_click(self._save)
         self._fileName.observe(self._onFileNameChange, names=['value'])
-
-    def _show_interface(self, other):
+        self._figure_width.observe(self._update_size_width, names=["value"])
+        self._figure_height.observe(self._update_size_height, names=["value"])
         self._box__figure_sliderSize = HBox(
             children =[self._figure_height, self._figure_width],
             layout=Layout(justify_content="flex-start", grid_gap="10px", width="100%")
         )
+
+    def _show_interface(self, other):
         self._dialog.clear_output()
         self._fileName.value = ''
         self.children = other + [self._box__figure_sliderSize] + [self._figure] + [self._save_interface]
@@ -65,18 +93,22 @@ class FigureForm(Form, Saveable):
     
     
     def _update_size_height(self, height):
-        newHeight = 500 + height.new*2
-        self._figure.update_layout(
-        autosize=False,
-        height=newHeight)
+        self._update_size(height=height.new)
         
     def _update_size_width(self, width):
-        newWidth = 500 + width.new*2
-        self._figure.update_layout(
-        autosize=False,
-        width=newWidth)
+        self._update_size(width=width.new)
         
-        
+    def _update_size(self, width=None, height=None):
+        if not self._figure is None:
+            if not width is None:
+                self._figure.update_layout(
+                    width=width
+                )
+            if not height is None:
+                self._figure.update_layout(
+                    height=height
+                )
+    
     def _save(self, _):
         # print("being called by ", inspect.stack())
         if self._figure != None:

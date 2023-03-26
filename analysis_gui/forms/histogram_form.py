@@ -7,7 +7,12 @@ class HistogramUI(FigureForm):
     
     def __init__(self):
         super().__init__(
-            layout=Layout(grid_gap="20px"),
+            layout=Layout(
+                grid_gap="20px",
+                align_items="flex-start",
+                overflow="visible",
+                width="max-content"
+            ),
             output=Output()
         )
         self._palettes = px.colors.qualitative.__dict__.copy()
@@ -32,37 +37,8 @@ class HistogramUI(FigureForm):
             layout=Layout(display='flex', flex_flow="row", grid_gap="5px")
         )
         
-        self._figure_width = IntSlider(
-            value=5,
-            min=1,
-            max=10,
-            step=1,
-            description='Width :',
-            disabled=False,
-            continuous_update=False,
-            orientation='horizontal',
-            readout=True,
-            readout_format='d'
-        )
-        
-        self._figure_height = IntSlider(
-            value=5,
-            min=1,
-            max=10,
-            step=1,
-            description='Height :',
-            disabled=False,
-            continuous_update=False,
-            orientation='horizontal',
-            readout=True,
-            readout_format='d'
-        )
-
-        
         self._sortBy.observe(self._sort_by, names=["value"])
         self._colorPicker.observe(self._change_color_palette, names=["value"])
-        self._figure_width.observe(self._update_size_width, names=["value"])
-        self._figure_height.observe(self._update_size_height, names=["value"])
         
     def init(self):
         self._df_questionnaires = common.df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])
@@ -82,12 +58,18 @@ class HistogramUI(FigureForm):
             color_discrete_sequence=self._palettes.get(self._colorPicker.value),
             category_orders = {'Category':self._df_questionnaires.sort_values(by='Ab').Category.unique()}
         )
+        
+        height = 600
+        width = 1067
+        self._figure_height.value = height
+        self._figure_width.value = width
+        
         self._figure = go.FigureWidget(bar)
-        self._figure.update_layout(xaxis_tickangle=-60, autosize=True, height=600)
+        self._figure.update_layout(xaxis_tickangle=-60, autosize=True, height=height, width=width)
         self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': self._df_questionnaires[self._sortBy.value].unique()})
         
-        # self._output = interactive_output(self.update, {'palette': self._colorPicker, "sortBy": self._sortBy})
-        # self._output.layout.width = "100%"
+        self._figure_width.value = self._figure.layout.width
+        
         children = [
             HBox(
                 children=[self._sortBy, self._colorPicker],

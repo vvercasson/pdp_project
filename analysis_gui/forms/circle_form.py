@@ -6,6 +6,16 @@ from ipywidgets import IntSlider
 class CircleForm(FigureForm):
     
     def __init__(self):     
+        super().__init__(
+            output=Output(width="fit-content"),
+            layout= Layout(
+                width="max-content",
+                grid_gap="10px",
+                align_items="flex-start",
+                overflow="visible"
+            )
+        )
+        
         self._max_radius = IntSlider(
             value=20,
             min=6,
@@ -18,48 +28,10 @@ class CircleForm(FigureForm):
             readout=True,
             readout_format='d'
         )
-        
-        super().__init__(
-            output=Output(width="fit-content"),
-            layout= Layout(
-                width="max-content",
-                grid_gap="10px",
-                align_items="flex-start",
-                overflow="visible"
-            )
-        )
-        
-        self._figure_width = IntSlider(
-            value=5,
-            min=1,
-            max=10,
-            step=1,
-            description='Width :',
-            disabled=False,
-            continuous_update=False,
-            orientation='horizontal',
-            readout=True,
-            readout_format='d'
-        )
-        
-        self._figure_height = IntSlider(
-            value=5,
-            min=1,
-            max=10,
-            step=1,
-            description='Height :',
-            disabled=False,
-            continuous_update=False,
-            orientation='horizontal',
-            readout=True,
-            readout_format='d'
-        )
 
     def init(self):
         if self._figure is None:
             self._max_radius.observe(self._update_radius, names=["value"])
-            self._figure_width.observe(self._update_size_width, names=["value"])
-            self._figure_height.observe(self._update_size_height, names=["value"])
         self._init_circle()
         children=[
             HBox(
@@ -76,6 +48,13 @@ class CircleForm(FigureForm):
                 radialaxis=dict(range=[0, radius["new"]])
             )
         )
+    
+    # def _update_size(self, width=None, height=None):
+    #     if not height is None:
+    #         self._figure.update_layout(
+    #             height=height,
+    #             width=height
+    #         )
 
     def _init_circle(self):
         df_col = common.df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=common.col).copy()
@@ -174,11 +153,15 @@ class CircleForm(FigureForm):
         )
 
         ### Set options common to all traces with self._figure.update_traces
+        width = 600
+        height = 500
+        self._figure_width.value = width
+        self._figure_height.value = height
         self._figure.update_polars(bgcolor='white')
         self._figure.update_layout(
             autosize=True, # to allow or not autosize
-            width=600, # width of the figure
-            height=500, # height of the figure
+            width=width, # width of the figure
+            height=height, # height of the figure
             paper_bgcolor = 'rgba(0,0,0,0)', plot_bgcolor= 'rgba(0,0,0,0)',# background color
             polar = dict( #options for the polar plot
                 radialaxis = dict(visible = True, # allowing radius lines  
