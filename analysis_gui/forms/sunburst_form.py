@@ -1,7 +1,6 @@
 from .common import *
 from . import common
 from .figure_form import FigureForm
-import numpy as np
 
 class SunburstForm(FigureForm):
     def __init__(self):

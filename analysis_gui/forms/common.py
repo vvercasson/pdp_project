@@ -8,6 +8,7 @@ jaccard_table = None
 jaccard = None
 
 import pandas as pd
+import numpy as np
 
 from ipywidgets import Layout, FileUpload, Button, \
     Box, VBox, HBox, Dropdown, Output, interactive_output, \

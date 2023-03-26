@@ -17,7 +17,6 @@ class JaccardTable(FigureForm):
         )
         
     def init(self):
-        clear_output()
         self.children = [self._output]
         
         common.jaccard_table = pd.DataFrame(np.zeros((common.df.shape[1]-5,common.df.shape[1]-5)), index = common.df.columns[4:-1], columns = common.df.columns[4:-1]) # df.columns[3:-1] : questionnaires without header
@@ -27,5 +26,6 @@ class JaccardTable(FigureForm):
                 
         
         with self._output:
+            clear_output()
             display(common.jaccard_table)
             common.jaccard_table.to_excel("table3_jaccard_pairs.xlsx")
