@@ -13,7 +13,9 @@ class HistogramUI(FigureForm):
                 overflow="visible",
                 width="max-content"
             ),
-            output=Output()
+            output=Output(),
+            default_figure_width=1067,
+            default_figure_height=600
         )
         self._palettes = px.colors.qualitative.__dict__.copy()
         self._df_questionnaires = None
@@ -59,16 +61,9 @@ class HistogramUI(FigureForm):
             category_orders = {'Category':self._df_questionnaires.sort_values(by='Ab').Category.unique()}
         )
         
-        height = 600
-        width = 1067
-        self._figure_height.value = height
-        self._figure_width.value = width
-        
         self._figure = go.FigureWidget(bar)
-        self._figure.update_layout(xaxis_tickangle=-60, autosize=True, height=height, width=width)
+        self._figure.update_layout(xaxis_tickangle=-60, autosize=True, height=self._default_figure_height, width=self._default_figure_width)
         self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': self._df_questionnaires[self._sortBy.value].unique()})
-        
-        self._figure_width.value = self._figure.layout.width
         
         children = [
             HBox(
@@ -83,7 +78,7 @@ class HistogramUI(FigureForm):
         self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': self._df_questionnaires[sortBy["new"]].unique()})
         
     def _change_color_palette(self, palette):
-        print(self._figure.data)
+        # print(self._figure.data)
         colors = cycle(self._palettes.get(palette["new"]))
         for bar in self._figure.data:
             bar.update(marker={'color' : next(colors)})

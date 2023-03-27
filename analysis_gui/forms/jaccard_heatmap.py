@@ -12,7 +12,9 @@ class JaccardHeatmap(FigureForm):
                 overflow="visible",
                 width="max-content"
             ),
-            output=Output()
+            output=Output(),
+            default_figure_height=600,
+            default_figure_width=600
         )
         
     def init(self):
@@ -29,10 +31,10 @@ class JaccardHeatmap(FigureForm):
         self._figure.update_xaxes(side="top")
         self._figure.update_layout(
             autosize=False,
-            width=600,
-            height=600
-            )
+            width=self._default_figure_width,
+            height=self._default_figure_height
+        )
         #fig.write_image("figure5_heatmap_jaccard.pdf") # writting the figure into a file
         # self._figure.show() # showing figure
         
-        self._show_interface([])
+        self._show_interface()

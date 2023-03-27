@@ -13,7 +13,9 @@ class CircleForm(FigureForm):
                 grid_gap="10px",
                 align_items="flex-start",
                 overflow="visible"
-            )
+            ),
+            default_figure_height=600,
+            default_figure_width=600
         )
         
         self._max_radius = IntSlider(
@@ -155,15 +157,11 @@ class CircleForm(FigureForm):
         )
 
         ### Set options common to all traces with self._figure.update_traces
-        width = 600
-        height = 500
-        self._figure_width.value = width
-        self._figure_height.value = height
         self._figure.update_polars(bgcolor='white')
         self._figure.update_layout(
             autosize=True, # to allow or not autosize
-            width=width, # width of the figure
-            height=height, # height of the figure
+            width=self._default_figure_width, # width of the figure
+            height=self._default_figure_height, # height of the figure
             paper_bgcolor = 'rgba(0,0,0,0)', plot_bgcolor= 'rgba(0,0,0,0)',# background color
             polar = dict( #options for the polar plot
                 radialaxis = dict(visible = True, # allowing radius lines  

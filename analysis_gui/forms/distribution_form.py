@@ -8,7 +8,9 @@ class DistributionUI(FigureForm):
     def __init__(self):
         super().__init__(
             layout=Layout(grid_gap="20px"),
-            output=Output()
+            output=Output(),
+            default_figure_width=800,
+            default_figure_height=400
         )
         
     def init(self):
@@ -23,11 +25,11 @@ class DistributionUI(FigureForm):
             self._figure.update_xaxes(side="top") # xaxis on top of the figure
             self._figure.update_layout(
                 autosize=False,
-                width=800,
-                height=400
-                )
+                width=self._default_figure_width,
+                height=self._default_figure_height
+            )
             
-            self._show_interface([])
+            self._show_interface()
             # fig.write_image("figure3_heatmap.pdf") # writing the figure in a file
             #fig.show() # showing the figure
         else: 
