@@ -18,6 +18,11 @@ from ipywidgets import Layout, FileUpload, Button, \
 from IPython.display import display, clear_output
 from itertools import cycle
 
+import chart_studio as cs
+import chart_studio.plotly as py
+
+cs.tools.set_credentials_file(username='vvercasson', api_key='qeP4TZRoVTWlnXijtZqD')
+
 import io, inspect
 import plotly.express as px
 import plotly.graph_objects as go

@@ -2,7 +2,6 @@ from typing import overload
 from .form import Form
 from analysis_gui.util.saveable import Saveable
 import os, base64
-import plotly.io as pio
 
 from IPython.display import Javascript
 from .common import *
@@ -22,6 +21,8 @@ class FigureForm(Form, Saveable):
         with open("resources/loading.gif", 'rb') as img:
             gif = img.read()
         self._loading = Image(value=gif, layout=Layout(width="15px", height="15px", visibility="hidden"))
+        
+        # Save Figure Option
         self._save_button = Button(
             description="Save",
             icon="save",
@@ -44,6 +45,30 @@ class FigureForm(Form, Saveable):
             )
         )
         
+        # ChartStudio Export Option
+        self._exportCSbutton = Button(
+            description="Export to Chart Studio",
+            tooltip="Export the figure to Chart Studio",
+            disabled=True
+        )
+        
+        self._CSfilename = Text(
+            placeholder="Chart Studio figure name",
+            disabled=False,
+            tooltip="The name of the figure in Chart Studio"
+        )
+        
+        self._exportCS_interface = HBox(
+            children=[self._CSfilename,self._exportCSbutton],
+            layout=Layout(
+                width="match-content",
+                justify_content="flex-start",
+                align_items="center",
+                grid_gap="10px"
+            )
+        )
+        
+        # Figure Size Options and Reset Option
         self._figure_height = IntSlider(
             value=self._default_figure_height,
             min=300,
@@ -88,22 +113,33 @@ class FigureForm(Form, Saveable):
             disabled=False
         )
         
+        self._option_sliders = HBox(
+            children =[self._figure_height, self._figure_width, self._font_size, self._reset_button],
+            layout=Layout(justify_content="flex-start", grid_gap="10px", width="100%")
+        )
+        
+        # Events
+        self._CSfilename.observe(self._onCSFileNameChange, names=['value'])
         self._save_button.on_click(self._save)
+        self._exportCSbutton.on_click(self._export_to_chart_studio)
         self._reset_button.on_click(self._reset_sliders)
         self._fileName.observe(self._onFileNameChange, names=['value'])
         self._figure_width.observe(self._update_size_width, names=["value"])
         self._figure_height.observe(self._update_size_height, names=["value"])
         self._font_size.observe(self._update_font_size, names=["value"])
         
-        self._option_sliders = HBox(
-            children =[self._figure_height, self._figure_width, self._font_size, self._reset_button],
-            layout=Layout(justify_content="flex-start", grid_gap="10px", width="100%")
-        )
+
+    def _onCSFileNameChange(self, change):
+        if change['new'] == '':
+            self._exportCSbutton.disabled = True
+        else:
+            self._exportCSbutton.disabled = False
 
     def _show_interface(self, other=[]):
         self._dialog.clear_output()
+        self._CSfilename.value = ''
         self._fileName.value = ''
-        self.children = other + [self._option_sliders] + [self._figure] + [self._save_interface]
+        self.children = other + [self._option_sliders] + [self._figure] + [self._save_interface] + [self._exportCS_interface]
         
     def _onFileNameChange(self, change):
         if change['new'] == '':
@@ -138,6 +174,11 @@ class FigureForm(Form, Saveable):
             self._figure.update_layout(
                 font=dict(size=size.new)
             )
+            
+    def _export_to_chart_studio(self, _):
+        # self._figure.update_layout(autosize=False)
+        py.plot(self._figure, filename=self._CSfilename.value, auto_open=True, sharing='public')
+        py.plot()
     
     def _save(self, _):
         # print("being called by ", inspect.stack())
