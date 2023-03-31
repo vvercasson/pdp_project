@@ -1,7 +1,7 @@
 from .common import *
 from . import common
 from .form import Form
-from ipywidgets import Checkbox, GridBox
+from ipywidgets import Checkbox, GridBox, ToggleButtons
 
 class ReferenceSelectionForm(Form):
     
@@ -16,14 +16,23 @@ class ReferenceSelectionForm(Form):
             )
         )
         
+        self.wantReferences = ToggleButtons(
+            options =['Yes', 'No'],
+            description='Do you want to select references?',
+            disabled=False,
+            tooltips=['Yes I want to use references', 'No I don\'t want to specify any references'],
+        )
+        
         self.buttonGenerate = Button(
             description="Generate",
             icon="play-circle",
             tooltip="Generate with the above references",
             disabled=False
         )
+        
         self.buttonGenerate.on_click(self.generateFigures)
         
+        self.wantReferences.observe(self.on_wantReferences_change, names='value')
     
     def init(self):
         self.checkBoxes = []
@@ -34,8 +43,13 @@ class ReferenceSelectionForm(Form):
             
         self._output.clear_output()
         self.children = [
+            HBox(
+                children=[self.wantReferences],
+                layout=Layout(justify_content="flex-start", grid_gap="5px", width="match-content")
+            ),
             GridBox(
-                self.checkBoxes, layout=Layout(grid_template_columns="repeat(3, 33%)")
+                children=self.checkBoxes,
+                layout=Layout(grid_template_columns="repeat(3, 33%)")
             ),
             HBox(
                 children=[self.buttonGenerate],
@@ -51,13 +65,24 @@ class ReferenceSelectionForm(Form):
             disabled=False
         )
     
+    def on_wantReferences_change(self, change):
+        if change['new'] == 'No':
+            self.clearReferences()
+            self.children = [self.wantReferences, self.buttonGenerate, self._output]
+        else:
+            self.init()
+            
+    def clearReferences(self):
+        common.references = []
+    
     def generateFigures(self, _):
+        # Change the references
         selected_options = []
         for i in self.checkBoxes:
             if i.value and not i.description in common.references:
                 selected_options.append(i.description)
         common.references.extend(selected_options)
-        # print(common.header)
+        
         sums = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 0) # sum of the number of symptom by questionnaire
         common.col = list(sums.sort_values(ascending=False).index.to_numpy()) #we create the list of columns
         common.col = header + common.col
