@@ -8,10 +8,7 @@ class HistogramUI(FigureForm):
     def __init__(self):
         super().__init__(
             layout=Layout(
-                grid_gap="20px",
-                align_items="flex-start",
-                overflow="visible",
-                width="max-content"
+                grid_gap="15px"
             ),
             output=Output(),
             default_figure_width=1067,
@@ -42,9 +39,12 @@ class HistogramUI(FigureForm):
         self._sortBy.observe(self._sort_by, names=["value"])
         self._colorPicker.observe(self._change_color_palette, names=["value"])
         
-    def init(self):
-        self._df_questionnaires = common.df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])
-        if common.df.shape[0] != common.df['Category'].isnull().sum(): 
+    def init(self, **kwargs):
+        args = self._parse_kwargs("df", "references", **kwargs)
+        df, references = args["df"], args["references"]
+        
+        self._df_questionnaires = df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])
+        if df.shape[0] != df['Category'].isnull().sum(): 
             self._color = 'Category'
         else: 
             self._color = 'sum_symptoms'

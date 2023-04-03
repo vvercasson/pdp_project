@@ -18,6 +18,7 @@ class ReferenceSelectionForm(Form):
         
         self.wantReferences = ToggleButtons(
             options =['Yes', 'No'],
+            value=None,
             description='Do you want to select references?',
             disabled=False,
             tooltips=['Yes I want to use references', 'No I don\'t want to specify any references'],
@@ -30,26 +31,28 @@ class ReferenceSelectionForm(Form):
             disabled=False
         )
         
-        self.buttonGenerate.on_click(self.generateFigures)
+        self._boxes_grid = GridBox(
+            layout=Layout(grid_template_columns="repeat(3, 33%)")
+        )
         
+        self.buttonGenerate.on_click(self.generateFigures)
         self.wantReferences.observe(self.on_wantReferences_change, names='value')
     
-    def init(self):
+    def init(self, **kwargs):
+        args = self._parse_kwargs("df", "references", **kwargs)
+        self.df = args["df"]
+        self.references = args["references"]
         self.checkBoxes = []
-        listRef = (ref for ref in list(common.df.columns) if ref not in common.header)
+        listRef = (ref for ref in list(self.df.columns) if ref not in common.header)
         for ref in listRef:
-            newCheckBox = self.createCheckbox(ref, ref in common.references)
+            newCheckBox = self.createCheckbox(ref, ref in self.references)
             self.checkBoxes.append(newCheckBox)
-            
+        self._boxes_grid.children = self.checkBoxes
         self._output.clear_output()
         self.children = [
             HBox(
                 children=[self.wantReferences],
                 layout=Layout(justify_content="flex-start", grid_gap="5px", width="match-content")
-            ),
-            GridBox(
-                children=self.checkBoxes,
-                layout=Layout(grid_template_columns="repeat(3, 33%)")
             ),
             HBox(
                 children=[self.buttonGenerate],
@@ -67,33 +70,32 @@ class ReferenceSelectionForm(Form):
     
     def on_wantReferences_change(self, change):
         if change['new'] == 'No':
-            self.clearReferences()
+            self.references = []
             self.children = [self.wantReferences, self.buttonGenerate, self._output]
         else:
-            self.init()
+            self._output.clear_output()
+            self.children = [self.wantReferences, self._boxes_grid, self.buttonGenerate, self._output]
             
-    def clearReferences(self):
-        common.references = []
-    
     def generateFigures(self, _):
         # Change the references
         selected_options = []
         for i in self.checkBoxes:
-            if i.value and not i.description in common.references:
+            if i.value and not i.description in self.references:
                 selected_options.append(i.description)
-        common.references.extend(selected_options)
+        self.references.extend(selected_options)
         
-        sums = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 0) # sum of the number of symptom by questionnaire
-        common.col = list(sums.sort_values(ascending=False).index.to_numpy()) #we create the list of columns
-        common.col = header + common.col
+        sums = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 0) # sum of the number of symptom by questionnaire
+        col = list(sums.sort_values(ascending=False).index.to_numpy()) #we create the list of columns
+        col = common.header + col
         # we apply the order of columns to the dataset
-        common.df = common.df.loc[:, common.col]
+        self.df = self.df.loc[:, col]
         self._output.clear_output(wait=True)
         with self._output:
             clear_output()
-            display(common.df.head())
-        common.df['sum_symptoms'] = (common.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
-        common.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
+            display(self.df.head())
+        self.df['sum_symptoms'] = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
+        self.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
         with self._output:
-            display(common.df.head())
-        self.executeNext()
+            display(self.df.head())
+            
+        self.executeNext(df=self.df, references=self.references, col=col)

@@ -15,16 +15,20 @@ class JaccardTable(FigureForm):
             output=Output()
         )
         
-    def init(self):
+    def init(self, **kwargs):
         self.children = [self._output]
         
-        common.jaccard_table = pd.DataFrame(np.zeros((common.df.shape[1]-5,common.df.shape[1]-5)), index = common.df.columns[4:-1], columns = common.df.columns[4:-1]) # df.columns[3:-1] : questionnaires without header
-        for questionnaire1 in common.df.columns[4:-1] : 
-            for questionnaire2 in common.df.columns[4:-1] : 
-                common.jaccard_table.loc[questionnaire1, questionnaire2] = jaccard_score(common.df[questionnaire1]>=1, common.df[questionnaire2]>=1)
-                
+        args = self._parse_kwargs("df", **kwargs)
+        df = args["df"]
         
+        jaccard_table = pd.DataFrame(np.zeros((df.shape[1]-5,df.shape[1]-5)), index = df.columns[4:-1], columns = df.columns[4:-1]) # df.columns[3:-1] : questionnaires without header
+        for questionnaire1 in df.columns[4:-1] :
+            for questionnaire2 in df.columns[4:-1] :
+                jaccard_table.loc[questionnaire1, questionnaire2] = jaccard_score(df[questionnaire1]>=1, df[questionnaire2]>=1)
+    
         with self._output:
             clear_output()
-            display(common.jaccard_table)
-            common.jaccard_table.to_excel("table3_jaccard_pairs.xlsx")
+            display(jaccard_table)
+            # jaccard_table.to_excel("table3_jaccard_pairs.xlsx")
+        kwargs["jaccard_table"] = jaccard_table
+        self.executeNext(**kwargs)

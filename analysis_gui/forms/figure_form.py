@@ -1,10 +1,14 @@
-from typing import overload
-from .form import Form
-from analysis_gui.util.saveable import Saveable
 import os, base64
 
-from IPython.display import Javascript
+from .form import Form
 from .common import *
+from analysis_gui.util.saveable import Saveable
+
+from IPython.display import Javascript
+from ipywidgets import Tab
+
+import chart_studio as cs
+import chart_studio.plotly as py
 
 class FigureForm(Form, Saveable):
     
@@ -22,10 +26,16 @@ class FigureForm(Form, Saveable):
             gif = img.read()
         self._loading = Image(value=gif, layout=Layout(width="15px", height="15px", visibility="hidden"))
         
+        self._create_save_interface()
+        self._create_options()
+        
+        self._set_event_handlers()
+        
+    def _create_save_interface(self):        
         # Save Figure Option
         self._save_button = Button(
             description="Save",
-            icon="save",
+            icon="download",
             tooltip="Click here to save the figure",
             disabled=True,
         )
@@ -35,10 +45,10 @@ class FigureForm(Form, Saveable):
             tooltip="Supported formats: ['png', 'jpg', 'jpeg', 'webp', 'svg', 'pdf', 'eps', 'json']"
         )
         
-        self._save_interface = HBox(
+        save_widget = HBox(
             children=[self._fileName, self._save_button, self._loading, self._dialog],
             layout=Layout(
-                width="100%",
+                width="match-content",
                 justify_content="flex-start",
                 align_items="center",
                 grid_gap="10px"
@@ -49,6 +59,7 @@ class FigureForm(Form, Saveable):
         self._exportCSbutton = Button(
             description="Export to Chart Studio",
             tooltip="Export the figure to Chart Studio",
+            icon="cloud-upload",
             disabled=True
         )
         
@@ -58,16 +69,62 @@ class FigureForm(Form, Saveable):
             tooltip="The name of the figure in Chart Studio"
         )
         
-        self._exportCS_interface = HBox(
-            children=[self._CSfilename,self._exportCSbutton],
+        self._user_name = Text(
+            placeholder="Chart Studio username/email",
+            disabled=False,
+            tooltip="Your Chart Studio username or email"
+        )
+        self._api_key = Text(
+            placeholder="Chart Studio API key",
+            disabled=False,
+            tooltip="The API key of your Chart Studio account"
+        )
+        self._login_button = Button(
+            description="Login",
+            tooltip="Login to Chart Studio",
+            disabled=True,
+            icon="sign-in"
+        )
+            
+        export = HBox(
+            children=[self._CSfilename, self._exportCSbutton, self._loading],
             layout=Layout(
-                width="match-content",
+                width="fit-content",
                 justify_content="flex-start",
                 align_items="center",
                 grid_gap="10px"
             )
         )
         
+        self._export_widget = VBox(
+            children=[export],
+            layout=Layout(
+                grid_gap="10px",
+            )
+        )
+        
+        self._sign_in_layout = TwoByTwoLayout(
+            top_left=self._user_name,
+            bottom_left=self._api_key,
+            top_right=self._login_button,
+            merge=False,
+            layout=Layout(
+                width="fit-content",
+                grid_gap="5px 20px"
+            )
+        )
+        
+        self._save_interface = Tab(
+            children=[save_widget, self._export_widget],
+            layout=Layout(
+                justify_content="flex-start"
+            )
+        )
+        
+        self._save_interface.set_title(0, "Download")
+        self._save_interface.set_title(1, "Export")
+        
+    def _create_options(self):
         # Figure Size Options and Reset Option
         self._figure_height = IntSlider(
             value=self._default_figure_height,
@@ -113,33 +170,49 @@ class FigureForm(Form, Saveable):
             disabled=False
         )
         
-        self._option_sliders = HBox(
-            children =[self._figure_height, self._figure_width, self._font_size, self._reset_button],
+        self._options = HBox(
+            children=[self._figure_height, self._figure_width, self._font_size, self._reset_button],
             layout=Layout(justify_content="flex-start", grid_gap="10px", width="100%")
         )
         
+    def _set_event_handlers(self):
         # Events
-        self._CSfilename.observe(self._onCSFileNameChange, names=['value'])
+        self._CSfilename.observe(self._on_cs_file_name_change, names=['value'])
+        self._api_key.observe(self._on_api_key_change, names=['value'])
         self._save_button.on_click(self._save)
-        self._exportCSbutton.on_click(self._export_to_chart_studio)
+        self._exportCSbutton.on_click(self._export)
         self._reset_button.on_click(self._reset_sliders)
         self._fileName.observe(self._onFileNameChange, names=['value'])
         self._figure_width.observe(self._update_size_width, names=["value"])
         self._figure_height.observe(self._update_size_height, names=["value"])
         self._font_size.observe(self._update_font_size, names=["value"])
-        
 
-    def _onCSFileNameChange(self, change):
+
+    def _on_cs_file_name_change(self, change):
+        if change['new'] == '':
+            self._exportCSbutton.disabled = True
+        else:
+            self._exportCSbutton.disabled = False
+            
+    def _on_api_key_change(self, change):
         if change['new'] == '':
             self._exportCSbutton.disabled = True
         else:
             self._exportCSbutton.disabled = False
 
+    def _add_sign_in(self):
+        
+        children = list(self._export_widget.children)
+        children = [self._sign_in_layout] + children if not self._sign_in_layout in children else children
+        self._export_widget.children = children
+
     def _show_interface(self, other=[]):
         self._dialog.clear_output()
         self._CSfilename.value = ''
         self._fileName.value = ''
-        self.children = other + [self._option_sliders] + [self._figure] + [self._save_interface] + [self._exportCS_interface]
+        if cs.tools.get_credentials_file().get("api_key") == "":
+            self._add_sign_in()
+        self.children = other + [self._options] + [self._figure] + [self._save_interface]
         
     def _onFileNameChange(self, change):
         if change['new'] == '':
@@ -173,12 +246,16 @@ class FigureForm(Form, Saveable):
         if not self._figure is None:
             self._figure.update_layout(
                 font=dict(size=size.new)
-            )
+            )    
             
-    def _export_to_chart_studio(self, _):
+    def _login_chart_studio(self, _):
+        cs.tools.set_credentials_file(username=self._cs_username.value, api_key=self._api_key.value)
+        self._exportCSbutton.disabled = False
+        
+    def _export(self, _):
         # self._figure.update_layout(autosize=False)
         py.plot(self._figure, filename=self._CSfilename.value, auto_open=True, sharing='public')
-        py.plot()
+        # py.plot()
     
     def _save(self, _):
         # print("being called by ", inspect.stack())

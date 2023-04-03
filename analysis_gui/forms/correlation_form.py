@@ -15,10 +15,12 @@ class Correlation(Form):
             )
         )
 
-    def init(self):
+    def init(self, **kwargs):
         self.children = [self._output]
+        args = self._parse_kwargs("jaccard", "sympt_per_questionnaire", **kwargs)
+        jaccard, sympt_per_questionnaire = args["jaccard"], args["sympt_per_questionnaire"]
         
-        correlations = common.jaccard.join(common.sympt_per_questionnaire)
+        correlations = jaccard.join(sympt_per_questionnaire)
         
         with self._output:
             clear_output()

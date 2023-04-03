@@ -13,9 +13,10 @@ class SunburstForm(FigureForm):
             default_figure_height=600
         )
     
-    def init(self):
+    def init(self, **kwargs):
         #replacing some wordings
-        df = self.break_columns()
+        args = self._parse_kwargs("df", **kwargs)
+        df = self.break_columns(args["df"])
         path = []
         if np.sum(df.Subcategory.isna()) != df.shape[0] : # with category and subcategory
             path = ['Category', 'Subcategory', 'Symptom']
@@ -36,18 +37,17 @@ class SunburstForm(FigureForm):
                 clear_output()
                 print("No category -> no sunburst plot")
                 
-    def break_columns(self, max_length = 16):
-        df = common.df.copy()
+    def break_columns(self, df, max_length = 16):
         categories = []
         subcategories = []
         symptoms = []
         
-        if np.sum(common.df.Category.isna()) != common.df.shape[0] :
-            categories = common.df.Category.unique().tolist()
-        if np.sum(common.df.Subcategory.isna()) != common.df.shape[0] :
-            subcategories = common.df.Subcategory.unique().tolist()
-        if np.sum(common.df.Symptom.isna()) != common.df.shape[0] :
-            symptoms = common.df.Symptom.unique().tolist()
+        if np.sum(df.Category.isna()) != df.shape[0] :
+            categories = df.Category.unique().tolist()
+        if np.sum(df.Subcategory.isna()) != df.shape[0] :
+            subcategories = df.Subcategory.unique().tolist()
+        if np.sum(df.Symptom.isna()) != df.shape[0] :
+            symptoms = df.Symptom.unique().tolist()
         
         for string in categories + subcategories + symptoms:
             df.replace(string, "<br>".join(textwrap.wrap(string, width=max_length)), inplace = True)

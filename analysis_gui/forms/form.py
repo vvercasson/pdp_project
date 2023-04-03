@@ -12,10 +12,27 @@ class Form(VBox, Chainable):
         Chainable.__init__(self)
         
         self._output = output
+        self.df = None
         
     def init(self):
         pass
     
     def update(self):
         pass
+    
+    def _parse_kwargs(self, *keys, **kwargs):
+        args = {}
+        if keys:
+            for key in keys :
+                try:
+                    args[key] = deepcopy(kwargs.get(key, None))
+                except TypeError:
+                    args[key] = copy(kwargs.get(key, None))
+        else:
+            args = deepcopy(kwargs)
+        
+        # print(args)
+        if "df" in keys and args.get("df", None) is None:
+            raise ValueError("Fatal value error, dataframe is none")
+        return args
     

@@ -15,7 +15,8 @@ class CircleForm(FigureForm):
                 overflow="visible"
             ),
             default_figure_height=600,
-            default_figure_width=600
+            default_figure_width=600,
+            default_font_size=10
         )
         
         self._max_radius = IntSlider(
@@ -31,10 +32,11 @@ class CircleForm(FigureForm):
             readout_format='d'
         )
 
-    def init(self):
+    def init(self, **kwargs):
         if self._figure is None:
             self._max_radius.observe(self._update_radius, names=["value"])
-        self._init_circle()
+        args = self._parse_kwargs("df", "col", **kwargs)
+        self._init_circle(args["df"], args["col"])
         children=[
             HBox(
                 children=[self._max_radius],
@@ -50,16 +52,20 @@ class CircleForm(FigureForm):
                 radialaxis=dict(range=[0, radius["new"]])
             )
         )
-    
-    # def _update_size(self, width=None, height=None):
-    #     if not height is None:
-    #         self._figure.update_layout(
-    #             height=height,
-    #             width=height
-    #         )
+        
+    def _update_font_size(self, size):
+        if not self._figure is None:
+            self._figure.update_layout(
+                polar = dict(
+                    angularaxis = dict(
+                        tickfont_size=int(size["new"] * 0.7)
+                    )
+                ),
+                legend=dict(font=dict(size=size["new"]))
+            )
 
-    def _init_circle(self):
-        df_col = common.df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=common.col).copy()
+    def _init_circle(self, df, col):
+        df_col = df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=col).copy()
         with common.melt_output:
             clear_output()
             display(df_col.head())
@@ -89,14 +95,14 @@ class CircleForm(FigureForm):
         self._figure = go.FigureWidget()
         # transparency plot with all the symptoms to set their order in the plot
         self._figure.add_trace(go.Scatterpolar(
-                    r = [0 for k in range(len(common.df.index))], # list of radiuses
-                    theta = common.df.Ab, # list of angles
+                    r = [0 for k in range(len(df.index))], # list of radiuses
+                    theta = df.Ab, # list of angles
                     mode = 'markers',
                     showlegend = False, # no legend thanks
                 opacity = 0.0, # everything transparent !
             ))
 
-        if common.df.shape[0] == common.df['Category'].isnull().sum() : 
+        if df.shape[0] == df['Category'].isnull().sum() : 
             df_col.loc[:,'Category'] = ""
 
         ### specific symptoms (value == 1)
@@ -144,8 +150,8 @@ class CircleForm(FigureForm):
 
         ### white circle in the center
         self._figure.add_trace(go.Scatterpolar(
-            r=[min_radius for k in range (len(common.df.Ab))], # radius of the circle = min_radius (set before)
-            theta=common.df.Ab, # all angles
+            r=[min_radius for k in range (len(df.Ab))], # radius of the circle = min_radius (set before)
+            theta=df.Ab, # all angles
             fill='toself',
             fillcolor = "white", # color of the circle
             showlegend = False, # no legend
@@ -176,9 +182,9 @@ class CircleForm(FigureForm):
                                     tickfont_color ='rgba(0,0,0,0)'),# putting tickfont into white to make them disappear
                 angularaxis = dict(
                 gridcolor = "lightgrey", # color of the angular grid
-                tickfont_size=7, # font size of labels (ex. "S01")
+                tickfont_size=int(self._default_font_size * 0.7), # font size of labels (ex. "S01")
                 rotation=90, # start position of angular axis 
                 direction="counterclockwise" # changin direction to align with Fried et al. 
                 )),
-                legend = dict(font = dict(size = 10, color = "black")) # size and color of the legend
+            legend = dict(font = dict(size = self._default_font_size, color = "black")) # size and color of the legend
         )

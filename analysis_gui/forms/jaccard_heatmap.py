@@ -17,13 +17,15 @@ class JaccardHeatmap(FigureForm):
             default_figure_width=600
         )
         
-    def init(self):
+    def init(self, **kwargs):
+        args = self._parse_kwargs("jaccard_table", **kwargs)
+        jaccard_table = args["jaccard_table"]
         ###
         # Plotting it as a heatmap
         ###
-        fig = px.imshow(pd.DataFrame(np.round(common.jaccard_table,3), # rounding values for the plot
-                                    index = common.jaccard_table.index,
-                                    columns= common.jaccard_table.columns),
+        fig = px.imshow(pd.DataFrame(np.round(jaccard_table,3), # rounding values for the plot
+                                    index = jaccard_table.index,
+                                    columns= jaccard_table.columns),
                         text_auto=True, # annotating values in the plot
                         color_continuous_scale= 'Portland'# more color palettes available here : https://plotly.com/python/builtin-colorscales/
         )

@@ -10,11 +10,11 @@ class Chainable():
     def unchain(self, any):
         self.nextLinks.append(any)
         
-    def executeNext(self, function="init"):
+    def executeNext(self, function="init", **kwargs):
         for link in self.nextLinks:
             try:
                 method = getattr(link, function)
             except Exception as e:
-                print(e)
+                # print(e)
                 continue
-            method()
+            method(**kwargs)

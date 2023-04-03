@@ -12,16 +12,18 @@ class RefDisplayUI(Form):
                             overflow="visible"
                             )
                         )
-    def init(self):
+    def init(self, **kwargs):
+        args = self._parse_kwargs("df", "references", **kwargs)
+        df, references = args["df"], args["references"]
         self.children = [self._output]
         
         with self._output:
             clear_output()
-            if len(common.references) > 0 :
-                for ref in common.references: 
+            if len(references) > 0 :
+                for ref in references: 
                     print("---", ref, "---")
-                    for symptom in common.df.Symptom.unique() : 
-                        if (int(common.df.loc[common.df.Symptom == symptom,ref]) == 1 and int(common.df.loc[common.df.Symptom == symptom, 'sum_symptoms'])==0) : 
+                    for symptom in df.Symptom.unique() : 
+                        if (int(df.loc[df.Symptom == symptom,ref]) == 1 and int(df.loc[df.Symptom == symptom, 'sum_symptoms'])==0) : 
                             print(symptom)
             else : 
                 print("References list is empty")

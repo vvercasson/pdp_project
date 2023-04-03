@@ -16,18 +16,20 @@ class JaccardPairIndex(Form):
         )
         self.type = type
         
-    def init(self):
+    def init(self, **kwargs):
         self.children = [self._output]
+        args = self._parse_kwargs("df", **kwargs)
+        df = args["df"]
         
-        if common.df.shape[0] != common.df[self.type].isnull().sum() : 
+        if df.shape[0] != df[self.type].isnull().sum() : 
             res = pd.DataFrame(
-                np.zeros((len(common.df[self.type].unique()),1)),
-                index = common.df.sort_values(by="Ab")[self.type].unique(),
+                np.zeros((len(df[self.type].unique()),1)),
+                index = df.sort_values(by="Ab")[self.type].unique(),
                 columns=['Avg. Jaccard Index']
             )
             
-            for category in common.df[self.type].unique() : 
-                df_category = common.df.drop(common.header+['sum_symptoms'],axis = 1)[common.df[self.type]==category]
+            for category in df[self.type].unique() : 
+                df_category = df.drop(common.header+['sum_symptoms'],axis = 1)[df[self.type]==category]
                 df_category = df_category.iloc[:,(df_category.sum(axis = 0)!=0.0).to_numpy()] # we keep only the questionnaire with at least 1 symptom
                 liste_avg = []
                 

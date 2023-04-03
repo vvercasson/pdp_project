@@ -13,11 +13,13 @@ class DistributionUI(FigureForm):
             default_figure_height=400
         )
         
-    def init(self):
-        if common.df.shape[0] != common.df['Category'].isnull().sum() : 
-            fig = px.imshow(pd.DataFrame(np.round(normalize(common.cat_per_questionnaire,norm='l1').T*100,1), # for printing text, we round the percentages to 1 decimal
-                                        columns = common.cat_per_questionnaire.index,
-                                        index= common.cat_per_questionnaire.columns),
+    def init(self, **kwargs):
+        args = self._parse_kwargs("df", "cat_per_questionnaire", **kwargs)
+        df, cat_per_questionnaire = args["df"], args["cat_per_questionnaire"]
+        if df.shape[0] != df['Category'].isnull().sum() : 
+            fig = px.imshow(pd.DataFrame(np.round(normalize(cat_per_questionnaire,norm='l1').T*100,1), # for printing text, we round the percentages to 1 decimal
+                                        columns = cat_per_questionnaire.index,
+                                        index= cat_per_questionnaire.columns),
                             text_auto=True, # add the text
                             color_continuous_scale= 'Portland'# more color palettes available here : https://plotly.com/python/builtin-colorscales/
             )
