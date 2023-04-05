@@ -17,3 +17,4 @@ jobs:
         DOCKER_PASSWORD: dckr_pat_t1JLODwu5MhofSyMrZb-7_WnPDw
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
+        IMAGE_NAME: soralsei/jupyter_generic_sleep_analysis
