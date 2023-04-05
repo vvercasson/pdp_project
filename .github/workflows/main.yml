@@ -1,4 +1,4 @@
-- name: repo2docker Action
+name: repo2docker Action
   uses: jupyterhub/repo2docker-action@0.2
   with:
     # Docker registry username
