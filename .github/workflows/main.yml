@@ -1,0 +1,29 @@
+- name: repo2docker Action
+  # You may pin to the exact commit or the version.
+  # uses: jupyterhub/repo2docker-action@2aa73524ac41f92bd2a4cdf90a7a33f461ea59e5
+  uses: jupyterhub/repo2docker-action@0.2
+  with:
+    # Docker registry username
+    DOCKER_USERNAME: # optional
+    # Docker registry password
+    DOCKER_PASSWORD: 
+    # name of the docker registry.  If not supplied, this defaults to registry.hub.docker.com.
+    DOCKER_REGISTRY: # optional
+    # name of the image.  Example - myusername/myContainer.  If not supplied, this defaults to $DOCKER_USERNAME/$GITHUB_REPOSITORY_NAME
+    IMAGE_NAME: # optional
+    # username of the primary user in the image
+    NOTEBOOK_USER: # optional
+    # Setting this variable to any value will prevent your image from being tagged with `latest`, in additiona to the GitHub commit SHA.  This is enabled by default.
+    LATEST_TAG_OFF: # optional
+    # An optional string that specifies the name of an additional tag you would like to apply to the image.  Images are already tagged with the relevant GitHub SHA.
+    ADDITIONAL_TAG: # optional
+    # Setting this variable to any value will turn debug mode on.  When debug mode is on, images will not be pushed to the registry.  Furthermore, verbose logging will be enabled.
+    NO_PUSH: # optional
+    # Setting this variable to any value will add the file binder/Dockerfile that references the docker image that was pushed to the registry by this Action.  You cannot use this option if the parameter NO_PUSH is set.  This is disabled by default.
+    BINDER_CACHE: # optional
+    # This the Git branch, tag, or commit that you want mybinder.org to proactively build from your repo.  This is useful if you wish to avoid startup time on mybinder.org.  Your repository must be public for this work, as mybinder.org only works on public repositories.
+    MYBINDERORG_TAG: # optional
+    # Setting this variable to any value will validate that the image pushed to the registry is publicly visible.
+    PUBLIC_REGISTRY_CHECK: # optional
+    # This is a private variable that is used by the maintainers of this Action for debugging.  Setting this value to true will prevent any changes from being saved to your repository.
+    NO_GIT_PUSH: # optional
