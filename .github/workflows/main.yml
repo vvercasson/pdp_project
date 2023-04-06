@@ -1,5 +1,9 @@
 name: Build Notebook Container
-on: [push]
+on: 
+  push:
+    paths : 
+      - "pdp_project/**"
+      - "!pdp_project/.github/**
 
 jobs:
   binder:
@@ -13,8 +17,8 @@ jobs:
     - name: update jupyter dependencies with repo2docker
       uses: jupyterhub/repo2docker-action@master
       with:
-        DOCKER_USERNAME: soralsei
-        DOCKER_PASSWORD: dckr_pat_t1JLODwu5MhofSyMrZb-7_WnPDw
+        DOCKER_USERNAME: a
+        DOCKER_PASSWORD: a
         BINDER_CACHE: true
         PUBLIC_REGISTRY_CHECK: true
         IMAGE_NAME: soralsei/jupyter_generic_sleep_analysis
