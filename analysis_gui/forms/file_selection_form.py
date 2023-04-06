@@ -29,7 +29,7 @@ class FileSelectionForm(Form):
             disabled=False
         )
         self.confirm = Button(
-            description="Confirm",
+            description="Bon,jour c'est un test",
             icon="check",
             tooltip="Click here to confirm your selection",
             disabled=False,
