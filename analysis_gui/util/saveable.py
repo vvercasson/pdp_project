@@ -1,6 +1,6 @@
-from analysis_gui.util.exportable import Exportable
+from .tools import get_dialog
 
-class Saveable(Exportable):
+class Saveable():
 
     def _save(self, _):
         pass
@@ -16,4 +16,4 @@ class Saveable(Exportable):
             a.click();
             '''
         
-        return self._get_export_dialog(message, header, headerclass, dialog_type='save', extrajs=anchor)
+        return get_dialog(message, header, headerclass, dialog_type='save', extrajs=anchor)
