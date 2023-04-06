@@ -90,7 +90,7 @@
     "extension": true,
     "outputDir": "hide_code/labextension",
     "_build": {
-      "load": "static/remoteEntry.aec58b314d7f1e3f9bad.js",
+      "load": "static/remoteEntry.b66e7b50010786e9b998.js",
       "extension": "./extension",
       "style": "./style"
     }
