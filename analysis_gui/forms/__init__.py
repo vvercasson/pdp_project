@@ -14,3 +14,4 @@ from .jaccard_heatmap import JaccardHeatmap
 from .average_jacc_index import AverageJaccardIndex
 from .correlation_form import Correlation
 from .jaccard_pair_index import JaccardPairIndex
+from .chart_studio_form import ChartStudioForm
