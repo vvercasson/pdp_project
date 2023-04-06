@@ -1,7 +1,9 @@
 from analysis_gui.forms.form import Form
 from .common import *
-from . import common
 import chart_studio
+from IPython.display import Javascript
+from analysis_gui.util.tools import get_dialog
+from ipywidgets import ToggleButtons
 
 class ChartStudioForm(Form):
     def __init__(self):
@@ -17,6 +19,13 @@ class ChartStudioForm(Form):
         self._createLoginLayout()
     
     def _createLoginLayout(self):
+        # crochet
+        self.hasCSAccount = ToggleButtons(
+            options =['Yes', 'No'],
+            value='No',
+            description='Do you have a Chart Studio account ?',
+            disabled=False,
+        )
         # ChartStudio Sign in Widgets   
         self._user_name = Text(
             placeholder="Chart Studio username/email",
@@ -46,14 +55,19 @@ class ChartStudioForm(Form):
                 grid_gap="5px 20px"
             )
         )
-        self.children = [self._sign_in_layout]
+        self.children = [self.hasCSAccount]
         self._login_button.on_click(self.setCredentials)
         self._api_key.observe(self._on_api_key_change, names=['value'])
         self._user_name.observe(self._on_username_change, names=['value'])
+        self.hasCSAccount.observe(self.on_hasAccount_change, names='value')
         
     # EVENTS 
-    # def _on_cs_file_name_change(self, change):
-    #     self._login_button.disabled = (change["new"] == '') or self._api_key.value == '' 
+    def on_hasAccount_change(self, change):
+        if change['new'] == 'No':
+            self.children = [self.hasCSAccount]
+        else:
+            self._output.clear_output()
+            self.children = [self.hasCSAccount, self._sign_in_layout, self._output]
             
     def _on_api_key_change(self, change):
         self._login_button.disabled = (change["new"] == '') or self._user_name.value == ''
@@ -63,9 +77,6 @@ class ChartStudioForm(Form):
     
     def setCredentials(self, _):
         chart_studio.tools.set_credentials_file(username=self._user_name.value, api_key=self._api_key.value)
-        
-        
-        
-    def init(self, **kwargs):
+        html, js = get_dialog("You are now logged in to Chart Studio", "Success", "success", "login")
         with self._output:
-            display(self._sign_in_layout)
+            display(HTML(html), Javascript(js))

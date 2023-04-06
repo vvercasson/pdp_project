@@ -79,7 +79,7 @@ def get_dialog(message, header, headerclass, dialog_type='generic', extrajs=''):
     
     js = f'''
     {extrajs}
-    const dialog = document.getElementById("save-dialog");
+    const dialog = document.getElementById("{dialog_type}-dialog");
     const close = document.getElementsByClassName("close")[0];
     dialog.showModal();
 
