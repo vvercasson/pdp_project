@@ -9,6 +9,7 @@ from ipywidgets import Tab
 
 import chart_studio as cs
 import chart_studio.plotly as py
+from chart_studio.exceptions import PlotlyRequestError
 
 class FigureForm(Form, Saveable):
     
@@ -115,14 +116,13 @@ class FigureForm(Form, Saveable):
         )
         
         self._save_interface = Tab(
-            children=[save_widget, self._export_widget],
+            children=[save_widget],
             layout=Layout(
                 justify_content="flex-start"
             )
         )
         
         self._save_interface.set_title(0, "Download")
-        self._save_interface.set_title(1, "Export")
         
     def _create_options(self):
         # Figure Size Options and Reset Option
@@ -201,16 +201,14 @@ class FigureForm(Form, Saveable):
             self._exportCSbutton.disabled = False
 
     def _add_sign_in(self):
-        
-        children = list(self._export_widget.children)
-        children = [self._sign_in_layout] + children if not self._sign_in_layout in children else children
-        self._export_widget.children = children
+        self._save_interface.children = [self._save_interface.children[0], self._export_widget]
+        self._save_interface.set_title(1, "Export")
 
     def _show_interface(self, other=[]):
         self._dialog.clear_output()
         self._CSfilename.value = ''
         self._fileName.value = ''
-        if cs.tools.get_credentials_file().get("api_key") == "":
+        if cs.tools.get_credentials_file().get("api_key"):
             self._add_sign_in()
         self.children = other + [self._options] + [self._figure] + [self._save_interface]
         
@@ -254,7 +252,11 @@ class FigureForm(Form, Saveable):
         
     def _export(self, _):
         # self._figure.update_layout(autosize=False)
-        py.plot(self._figure, filename=self._CSfilename.value, auto_open=True, sharing='public')
+        try:
+            py.plot(self._figure, filename=self._CSfilename.value, auto_open=True, sharing='public')
+        except PlotlyRequestError as e:
+            pass
+        
         # py.plot()
     
     def _save(self, _):

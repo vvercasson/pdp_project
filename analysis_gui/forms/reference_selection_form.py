@@ -90,12 +90,10 @@ class ReferenceSelectionForm(Form):
         # we apply the order of columns to the dataset
         self.df = self.df.loc[:, col]
         self._output.clear_output(wait=True)
-        with self._output:
-            clear_output()
-            display(self.df.head())
         self.df['sum_symptoms'] = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
         self.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
         with self._output:
+            clear_output()
             display(self.df.head())
             
         self.executeNext(df=self.df, references=self.references, col=col)

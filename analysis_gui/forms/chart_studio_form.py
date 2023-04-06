@@ -4,6 +4,8 @@ import chart_studio
 from IPython.display import Javascript
 from analysis_gui.util.tools import get_dialog
 from ipywidgets import ToggleButtons
+from requests.auth import HTTPBasicAuth
+import requests
 
 class ChartStudioForm(Form):
     def __init__(self):
@@ -20,9 +22,9 @@ class ChartStudioForm(Form):
     
     def _createLoginLayout(self):
         # crochet
-        self.hasCSAccount = ToggleButtons(
+        self.has_cs_account = ToggleButtons(
             options =['Yes', 'No'],
-            value='No',
+            value=None,
             description='Do you have a Chart Studio account ?',
             disabled=False,
         )
@@ -55,19 +57,20 @@ class ChartStudioForm(Form):
                 grid_gap="5px 20px"
             )
         )
-        self.children = [self.hasCSAccount]
+        self.children = [self.has_cs_account]
         self._login_button.on_click(self.setCredentials)
         self._api_key.observe(self._on_api_key_change, names=['value'])
         self._user_name.observe(self._on_username_change, names=['value'])
-        self.hasCSAccount.observe(self.on_hasAccount_change, names='value')
+        self.has_cs_account.observe(self.on_has_account_change, names='value')
         
     # EVENTS 
-    def on_hasAccount_change(self, change):
+    def on_has_account_change(self, change):
         if change['new'] == 'No':
-            self.children = [self.hasCSAccount]
+            self.children = [self.has_cs_account]
+            self.executeNext()
         else:
             self._output.clear_output()
-            self.children = [self.hasCSAccount, self._sign_in_layout, self._output]
+            self.children = [self.has_cs_account, self._sign_in_layout, self._output]
             
     def _on_api_key_change(self, change):
         self._login_button.disabled = (change["new"] == '') or self._user_name.value == ''
@@ -76,7 +79,18 @@ class ChartStudioForm(Form):
         self._login_button.disabled = (change["new"] == '') or self._api_key.value == ''
     
     def setCredentials(self, _):
-        chart_studio.tools.set_credentials_file(username=self._user_name.value, api_key=self._api_key.value)
-        html, js = get_dialog("You are now logged in to Chart Studio", "Success", "success", "login")
-        with self._output:
-            display(HTML(html), Javascript(js))
+        auth = HTTPBasicAuth(self._user_name.value, self._api_key.value)
+        headers = {'Plotly-Client-Platform': 'python'}
+        res = requests.get("https://api.plotly.com/v2/folders/themes_shared", auth=auth, headers=headers)
+        if (res.status_code == 200):
+            html, js = get_dialog("You are now logged in to Chart Studio", "Login successful", "success")
+            chart_studio.tools.set_credentials_file(username=self._user_name.value, api_key=self._api_key.value)
+            with self._output:
+                clear_output(wait=True)
+                display(HTML(html), Javascript(js))
+            self.executeNext()
+        else :
+            html, js = get_dialog("Please check your credentials", "Login failed", "failure")
+            with self._output:
+                clear_output(wait=True)
+                display(HTML(html), Javascript(js))

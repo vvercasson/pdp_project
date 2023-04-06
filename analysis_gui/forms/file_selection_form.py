@@ -35,21 +35,23 @@ class FileSelectionForm(Form):
             disabled=False,
         )
         
-        self.children = [
-                HBox(
-                    children=[self.dropdown, self.filepicker],
-                    layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
-                ),
-                HBox(
-                    children=[self.confirm],
-                    layout=Layout(justify_content="flex-start", width="100%")
-                ),
-                self._output
-            ]
-        
         self.dropdown.observe(self._onDropdownChange, names="value")
         self.filepicker.observe(self._onFileUpload, names="value")
         self.confirm.on_click(self.confirmForm)
+        
+    def init(self, **kwargs):
+        
+        self.children = [
+            HBox(
+                children=[self.dropdown, self.filepicker],
+                layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
+            ),
+            HBox(
+                children=[self.confirm],
+                layout=Layout(justify_content="flex-start", width="100%")
+            ),
+            self._output
+        ]
         
     def _onDropdownChange(self, change):
         if change["new"] == "Custom":
