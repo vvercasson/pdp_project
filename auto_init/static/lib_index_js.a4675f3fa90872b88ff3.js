@@ -11,7 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448.07 373.91\">\n    <g xmlns=\"http://www.w3.org/2000/svg\" class=\"jp-icon2\" fill=\"#424242\">\n        <g id=\"Layer_4\" data-name=\"Layer 4\">\n            <polygon class=\"auto-init-play-icon\" points=\"204.68 127.38 264.68 187.38 204.68 247.38 204.68 127.38\" />\n        </g>\n        <g id=\"Layer_3\" data-name=\"Layer 3\">\n            <path class=\"auto-init-circular-arrow\"\n                d=\"M370.45,386a175.11,175.11,0,0,1-214.56,14.57A177.09,177.09,0,0,1,96,331.29a174.7,174.7,0,0,1-14.25-43.92\"\n                transform=\"translate(-29.82 -68.62)\" />\n            <path class=\"auto-init-circular-arrow-head\"\n                d=\"M41.82,322.7a186.53,186.53,0,0,1,37.4-56.29C95.9,279.7,114,289,132.16,294.12\"\n                transform=\"translate(-29.82 -68.62)\" />\n            <path class=\"auto-init-circular-arrow\"\n                d=\"M137.25,125.11a175.09,175.09,0,0,1,214.56-14.57,176.88,176.88,0,0,1,59.85,69.32,174.72,174.72,0,0,1,14.26,43.92\"\n                transform=\"translate(-29.82 -68.62)\" />\n            <path class=\"auto-init-circular-arrow-head\"\n                d=\"M465.88,188.45a186.53,186.53,0,0,1-37.4,56.29c-16.68-13.29-34.75-22.59-52.94-27.71\"\n                transform=\"translate(-29.82 -68.62)\" />\n        </g>\n    </g>\n</svg>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<svg id=\"Layer_5\" data-name=\"Layer 5\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 343.95 340\">\n    <g xmlns=\"http://www.w3.org/2000/svg\" class=\"jp-icon2\" stroke=\"#424242\">\n        <path d=\"M260.23,106a150,150,0,1,1-87.52,28.16\" transform=\"translate(-86.27 -86)\"\n            style=\"stroke-linecap:round;stroke-miterlimit:10;stroke-width:40px\" />\n        <polyline points=\"15.5 46.29 92.69 39.53 99.44 116.72\"\n            style=\"stroke-linecap:round;stroke-linejoin:round;stroke-width:31px\" />\n        <polygon points=\"157.45 110 217.45 170 157.45 230 157.45 110\"\n            style=\"stroke-linejoin:round;stroke-width:34px\" />\n    </g>\n</svg>");
 
 /***/ }),
 
@@ -180,4 +180,4 @@ const plugin = {
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.e41b438096bb1a1785ea.js.map
+//# sourceMappingURL=lib_index_js.a4675f3fa90872b88ff3.js.map
