@@ -13,7 +13,7 @@ echo "Done"
 
 echo "Setting up default settings overrides..."
 cd ..
-ls -l
+mkdir lab/settings
 mv $HOME/overrides.json lab/settings/
 
 echo "Done"
