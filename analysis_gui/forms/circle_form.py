@@ -86,8 +86,6 @@ class CircleForm(PaletteFigureForm):
                         color = dic_color[scale], # color depending on the scale 
                     )
                 )
-                
-            for scale in dic_color.keys() : 
                 self._figure.update_traces(
                     selector=dict(
                         marker=dict( # properties of the markers

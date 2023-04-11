@@ -8,7 +8,7 @@ class SunburstForm(PaletteFigureForm):
         super().__init__(
             layout=Layout(grid_gap="40px"),
             output=Output(),
-            default_font_size=12,
+            default_font_size=11,
             default_figure_width=600,
             default_figure_height=600
         )
@@ -16,16 +16,16 @@ class SunburstForm(PaletteFigureForm):
     def init(self, **kwargs):
         #replacing some wordings
         args = self._parse_kwargs("df", **kwargs)
-        df = self.break_columns(args["df"])
+        self.df = self.break_columns(args["df"])
         path = []
-        if np.sum(df.Subcategory.isna()) != df.shape[0] : # with category and subcategory
+        if np.sum(self.df.Subcategory.isna()) != self.df.shape[0] : # with category and subcategory
             path = ['Category', 'Subcategory', 'Symptom']
-        elif np.sum(df.Category.isna()) != df.shape[0] : # with category only
+        elif np.sum(self.df.Category.isna()) != self.df.shape[0] : # with category only
             path = ['Category', 'Symptom']
             
         if path:
-            fig = px.sunburst(df, path=path, values='sum_symptoms', color_discrete_sequence = common._palettes.get(self._colorPicker.value))
-            fig.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=11, width=self._default_figure_width, height=self._default_figure_height)
+            fig = px.sunburst(self.df, path=path, values='sum_symptoms', color_discrete_sequence = common._palettes.get(self._colorPicker.value))
+            fig.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=self._default_font_size, width=self._default_figure_width, height=self._default_figure_height)
             fig.update_traces(insidetextorientation='radial')
             fig.update_traces(hovertemplate='sum_symptom: %{value}')
             
@@ -52,8 +52,20 @@ class SunburstForm(PaletteFigureForm):
         for string in categories + subcategories + symptoms:
             df.replace(string, "<br>".join(textwrap.wrap(string, width=max_length)), inplace = True)
             
-        return df
+        return df.copy()
     
     def _change_color_palette(self, palette):
-        print("TODO")
-        pass
+        # TODO: color palette isn't in the right order
+        # should stay coherent default palette order
+        palette = common._palettes.get(palette["new"])
+        c = cycle(palette)
+        categories = self.df.Category.unique().tolist()
+        cols = {}
+        for cat in categories:
+            cols[cat] = next(c)
+        colors = []
+        for label in self._figure.data[0].labels:
+            df = self.df[self.df.isin([label]).any(axis=1)]
+            colors.append(cols[df.Category.unique()[0]])
+            # print(df)
+        self._figure.update_traces(marker_colors=colors)
