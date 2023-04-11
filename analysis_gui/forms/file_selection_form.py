@@ -39,7 +39,7 @@ class FileSelectionForm(Form):
         self.filepicker.observe(self._onFileUpload, names="value")
         self.confirm.on_click(self.confirmForm)
         
-    def init(self, **kwargs):
+    def init(self, **_):
         
         self.children = [
             HBox(

@@ -31,8 +31,5 @@ class Form(VBox, Chainable):
         else:
             args = deepcopy(kwargs)
         
-        # print(args)
-        if "df" in keys and args.get("df", None) is None:
-            raise ValueError("Fatal value error, dataframe is none")
         return args
     

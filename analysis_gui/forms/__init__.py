@@ -1,4 +1,10 @@
-all = ["FileSelectionForm", "HistogramUI"]
+all = [
+    "FileSelectionForm", "HistogramUI", "ReferenceSelectionForm",
+    "CircleForm", "NumSymptomsUI", "DistributionUI",
+    "RefDisplayUI", "NumSymCat", "JaccardTable",
+    "SunburstForm", "JaccardHeatmap", "AverageJaccardIndex",
+    "Correlation", "JaccardPairIndex", "ChartStudioForm"
+]
 
 from .file_selection_form import FileSelectionForm
 from .histogram_form import HistogramUI

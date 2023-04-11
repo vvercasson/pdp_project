@@ -1,9 +1,9 @@
 from .common import *
 from . import common
-from .figure_form import FigureForm
+from .palette_figure_form import PaletteFigureForm
 from ipywidgets import ToggleButtons
 
-class HistogramUI(FigureForm):
+class HistogramUI(PaletteFigureForm):
     
     def __init__(self):
         super().__init__(
@@ -14,18 +14,8 @@ class HistogramUI(FigureForm):
             default_figure_width=1067,
             default_figure_height=600
         )
-        self._palettes = px.colors.qualitative.__dict__.copy()
         self._df_questionnaires = None
         # self._sortBy = "Symptom"
-        
-        self._colorPicker = Dropdown(
-            options=[name for name, body 
-                     in inspect.getmembers(px.colors.qualitative)
-                     if isinstance(body, list) and name != "__all__" and not name.endswith("_r")],
-            value='Pastel',
-            description="Color Palette",
-            disabled=False
-        )
         
         self._sortBy =ToggleButtons(
             options=[('Occurences', 'Symptom'), ('Category', 'Category')],
@@ -37,7 +27,6 @@ class HistogramUI(FigureForm):
         )
         
         self._sortBy.observe(self._sort_by, names=["value"])
-        self._colorPicker.observe(self._change_color_palette, names=["value"])
         
     def init(self, **kwargs):
         args = self._parse_kwargs("df", "references", **kwargs)
@@ -57,7 +46,7 @@ class HistogramUI(FigureForm):
             y='sum_symptoms',
             color=self._color,
             labels={'sum_symptoms':'Number of questionnaires'},
-            color_discrete_sequence=self._palettes.get(self._colorPicker.value),
+            color_discrete_sequence=common._palettes.get(self._colorPicker.value),
             category_orders = {'Category':self._df_questionnaires.sort_values(by='Ab').Category.unique()}
         )
         
@@ -65,13 +54,7 @@ class HistogramUI(FigureForm):
         self._figure.update_layout(xaxis_tickangle=-60, autosize=True, height=self._default_figure_height, width=self._default_figure_width)
         self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': self._df_questionnaires[self._sortBy.value].unique()})
         
-        children = [
-            HBox(
-                children=[self._sortBy, self._colorPicker],
-                layout=Layout(width="100%", grid_gap="10px")
-            )
-        ]
-        self._show_interface(children)
+        self._show_interface([self._sortBy])
         
     def _sort_by(self, sortBy):
         # print(sortBy["new"])
@@ -79,6 +62,6 @@ class HistogramUI(FigureForm):
         
     def _change_color_palette(self, palette):
         # print(self._figure.data)
-        colors = cycle(self._palettes.get(palette["new"]))
+        colors = cycle(common._palettes.get(palette["new"]))
         for bar in self._figure.data:
             bar.update(marker={'color' : next(colors)})

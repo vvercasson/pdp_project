@@ -181,7 +181,7 @@ class FigureForm(Form, Saveable):
         self._api_key.observe(self._on_api_key_change, names=['value'])
         self._save_button.on_click(self._save)
         self._exportCSbutton.on_click(self._export)
-        self._reset_button.on_click(self._reset_sliders)
+        self._reset_button.on_click(self._reset_options)
         self._fileName.observe(self._onFileNameChange, names=['value'])
         self._figure_width.observe(self._update_size_width, names=["value"])
         self._figure_height.observe(self._update_size_height, names=["value"])
@@ -235,7 +235,7 @@ class FigureForm(Form, Saveable):
                     height=height
                 )
     
-    def _reset_sliders(self, _):
+    def _reset_options(self, _):
         self._figure_width.value = self._default_figure_width
         self._figure_height.value = self._default_figure_height
         self._font_size.value = self._default_font_size
