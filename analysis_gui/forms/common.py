@@ -19,6 +19,6 @@ melt_output=Output()
 
 def filter_palettes(pair):
     key, value = pair
-    print(key)
+    # print(key)
     return isinstance(value, list) and key != "__all__" and not key.endswith("_r")
 _palettes = dict(filter(filter_palettes, px.colors.qualitative.__dict__.items()))
