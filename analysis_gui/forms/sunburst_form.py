@@ -1,9 +1,9 @@
 from analysis_gui.forms.common import *
 from analysis_gui.forms import common
-from analysis_gui.forms.figure_form import FigureForm
+from analysis_gui.forms.palette_figure_form import PaletteFigureForm
 import textwrap
 
-class SunburstForm(FigureForm):
+class SunburstForm(PaletteFigureForm):
     def __init__(self):
         super().__init__(
             layout=Layout(grid_gap="40px"),
@@ -24,7 +24,7 @@ class SunburstForm(FigureForm):
             path = ['Category', 'Symptom']
             
         if path:
-            fig = px.sunburst(df, path=path, values='sum_symptoms',color_discrete_sequence = px.colors.qualitative.Pastel)
+            fig = px.sunburst(df, path=path, values='sum_symptoms', color_discrete_sequence = common._palettes.get(self._colorPicker.value))
             fig.update_layout(margin = dict(t=0, l=0, r=0, b=0), font_size=11, width=self._default_figure_width, height=self._default_figure_height)
             fig.update_traces(insidetextorientation='radial')
             fig.update_traces(hovertemplate='sum_symptom: %{value}')
@@ -53,3 +53,7 @@ class SunburstForm(FigureForm):
             df.replace(string, "<br>".join(textwrap.wrap(string, width=max_length)), inplace = True)
             
         return df
+    
+    def _change_color_palette(self, palette):
+        print("TODO")
+        pass
