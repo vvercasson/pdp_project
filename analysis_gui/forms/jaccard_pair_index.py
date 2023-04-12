@@ -39,7 +39,7 @@ class JaccardPairIndex(TableForm):
                             
                     liste_avg.append(np.mean(liste))
                 res.loc[category, 'Avg. Jaccard Index'] = np.mean(liste_avg)
-                
+            self._generated_frame = res 
             with self._output:
                 clear_output()
                 display(res)

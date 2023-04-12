@@ -16,6 +16,7 @@ class TableForm(Form, Saveable):
         args = self._parse_kwargs("df", **kwargs)
         df = args["df"]
         self._df = df
+        self._generated_frame = None
     
     def _save(self, _):
         filename = self._fileName.value
@@ -29,21 +30,24 @@ class TableForm(Form, Saveable):
         header = 'Failed'
         mime = ''
         fileuri = ''
-        self._loading.layout.visibility = 'visible' # type: ignore
-        try:
-            file = save_dataframe(self._df, extension)
-        except Exception as e:
-            message = f'{e}'
-        finally:
-            self._loading.layout.visibility = "hidden"
-            
-        if not file is None:
-            file = base64.b64encode(file.getbuffer()).decode()
-            message = f'Successfully saved image as {filename}'
-            headerclass = 'success'
-            header = 'Success !'
-            mime = common.mime_types[extension]
-            fileuri = f"data:{mime};base64,{file}"
+        if self._generated_frame is not None:
+            self._loading.layout.visibility = 'visible' # type: ignore
+            try:
+                file = save_dataframe(self._generated_frame, extension)
+            except Exception as e:
+                message = f'{e}'
+            finally:
+                self._loading.layout.visibility = "hidden"
+                
+            if not file is None:
+                file = base64.b64encode(file.getbuffer()).decode()
+                message = f'Successfully saved image as {filename}'
+                headerclass = 'success'
+                header = 'Success !'
+                mime = common.mime_types[extension]
+                fileuri = f"data:{mime};base64,{file}"
+        else :
+            message = 'No data to save'
         html, js = self._get_save_dialog(message, header, headerclass, filename, fileuri) # type: ignore
         with self._save_dialog:
             clear_output()

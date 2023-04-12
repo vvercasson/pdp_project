@@ -24,7 +24,7 @@ class AverageJaccardIndex(TableForm):
         # display(jaccard)
         # jaccard.to_excel("table4_jaccard_average_questionnaires.xlsx")
         # print("Average Jaccard index (wo references): "+str(np.round(float(jaccard.mean()),5)) +" (sd: "+str(np.round(float(jaccard.std()),4))+ ")" )
-        
+        self._generated_frame = jaccard
         with self._output:
             clear_output(wait=True)
             display(jaccard)

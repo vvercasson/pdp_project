@@ -117,10 +117,10 @@ def save_dataframe(df, extension):
     if extension == '':
         raise ValueError("filename cannot be empty")
     if extension == 'csv':
-        df.to_csv(file, index=False)
+        df.to_csv(file)
     elif extension == 'xlsx' or extension == 'xls':
         writer = pd.ExcelWriter('temp.' + extension) # type: ignore
-        df.to_excel(writer, index=False, engine=extension + 'writer')
+        df.to_excel(writer, engine=extension + 'writer')
         writer.book.save(file)
         os.remove('temp.' + extension)
     else:

@@ -22,7 +22,7 @@ class NumSymptomsUI(TableForm):
         sympt_per_questionnaire['Compound symptoms'] = (self._df.iloc[:,4:-1]==2).sum(axis = 0)
         sympt_per_questionnaire['Total'] = (self._df.iloc[:,4:-1]>=1).sum(axis = 0)
         
-        
+        self._generated_frame = sympt_per_questionnaire
         with self._output:
             clear_output()
             display(sympt_per_questionnaire)
