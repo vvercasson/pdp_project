@@ -8,7 +8,6 @@ class DistributionUI(FigureForm):
     def __init__(self):
         super().__init__(
             layout=Layout(grid_gap="20px"),
-            output=Output(),
             default_figure_width=800,
             default_figure_height=400
         )

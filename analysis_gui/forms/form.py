@@ -4,7 +4,9 @@ from ..util.chainable import Chainable
 
 class Form(VBox, Chainable):
     
-    def __init__(self, output=Output(), layout=Layout()):
+    def __init__(self, output=None, layout=None):
+        layout = layout if not layout is None else Layout()
+        output = output if not output is None else Output()
         VBox.__init__(
             self,
             layout=layout

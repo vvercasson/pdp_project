@@ -11,7 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<svg id=\"Layer_5\" data-name=\"Layer 5\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 343.95 340\">\n    <g xmlns=\"http://www.w3.org/2000/svg\" class=\"jp-icon2\" stroke=\"#424242\">\n        <path d=\"M260.23,106a150,150,0,1,1-87.52,28.16\" transform=\"translate(-86.27 -86)\"\n            style=\"stroke-linecap:round;stroke-miterlimit:10;stroke-width:40px\" />\n        <polyline points=\"15.5 46.29 92.69 39.53 99.44 116.72\"\n            style=\"stroke-linecap:round;stroke-linejoin:round;stroke-width:31px\" />\n        <polygon points=\"157.45 110 217.45 170 157.45 230 157.45 110\"\n            style=\"stroke-linejoin:round;stroke-width:34px\" />\n    </g>\n</svg>");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ("<svg id=\"Layer_5\" data-name=\"Layer 5\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 343.95 340\">\n    <g xmlns=\"http://www.w3.org/2000/svg\" class=\"jp-icon3\" stroke=\"#616161\" fill=\"#616161\" fill-opacity=\"0.0\">\n        <path d=\"M260.23,106a150,150,0,1,1-87.52,28.16\" transform=\"translate(-86.27 -86)\"\n            style=\"stroke-linecap:round;stroke-miterlimit:10;stroke-width:30px\" />\n        <polyline points=\"15.5 46.29 92.69 39.53 99.44 116.72\"\n            style=\"stroke-linecap:round;stroke-linejoin:round;stroke-width:21px\" />\n        <polygon points=\"157.45 110 217.45 170 157.45 230 157.45 110\"\n            style=\"/*stroke-linejoin:round*/;stroke-width:34px\" fill-opacity=\"1.0\"/>\n    </g>\n</svg>");
 
 /***/ }),
 
@@ -180,4 +180,4 @@ const plugin = {
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.a4675f3fa90872b88ff3.js.map
+//# sourceMappingURL=lib_index_js.843f42ddd82ab56f4f5c.js.map

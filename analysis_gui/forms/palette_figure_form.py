@@ -6,7 +6,7 @@ import time
 
 class PaletteFigureForm(FigureForm):
     
-    def __init__(self, output, layout, default_font_size=12, default_figure_width=500, default_figure_height=500, default_palette="Pastel"):
+    def __init__(self, output=None, layout=None, default_font_size=12, default_figure_width=500, default_figure_height=500, default_palette="Pastel"):
         super().__init__(output, layout, default_font_size, default_figure_width, default_figure_height)
         self._default_palette = default_palette
         self._colorPicker = Dropdown(

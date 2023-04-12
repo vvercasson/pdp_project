@@ -10,7 +10,6 @@ class HistogramUI(PaletteFigureForm):
             layout=Layout(
                 grid_gap="15px"
             ),
-            output=Output(),
             default_figure_width=1067,
             default_figure_height=600
         )

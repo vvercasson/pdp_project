@@ -13,7 +13,7 @@ from chart_studio.exceptions import PlotlyRequestError
 
 class FigureForm(Form, Saveable):
     
-    def __init__(self, output, layout, default_font_size=12, default_figure_width=500, default_figure_height=500):
+    def __init__(self, output=None, layout=None, default_font_size=12, default_figure_width=500, default_figure_height=500):
         super().__init__(output, layout)
         
         self._default_font_size = default_font_size

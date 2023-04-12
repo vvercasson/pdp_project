@@ -12,7 +12,6 @@ class JaccardHeatmap(FigureForm):
                 overflow="visible",
                 width="max-content"
             ),
-            output=Output(),
             default_figure_height=600,
             default_figure_width=600
         )

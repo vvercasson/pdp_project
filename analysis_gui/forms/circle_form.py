@@ -1,6 +1,6 @@
 from analysis_gui.forms.palette_figure_form import PaletteFigureForm
-from . import common
 from .common import *
+import analysis_gui.forms.common as common
 
 class CircleForm(PaletteFigureForm):
     
@@ -107,7 +107,7 @@ class CircleForm(PaletteFigureForm):
 
     def _init_circle(self):
         df_col = self._df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=self._col).copy()
-        with common.melt_output:
+        with melt_output:
             clear_output()
             display(df_col.head())
         min_radius = self._max_radius.min

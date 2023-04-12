@@ -11,8 +11,7 @@ class JaccardTable(FigureForm):
                 align_items="flex-start",
                 overflow="visible",
                 width="max-content"
-            ),
-            output=Output()
+            )
         )
         
     def init(self, **kwargs):

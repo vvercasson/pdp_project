@@ -6,12 +6,11 @@ import textwrap
 class SunburstForm(PaletteFigureForm):
     def __init__(self):
         super().__init__(
-            layout=Layout(grid_gap="40px"),
-            output=Output(),
             default_font_size=11,
             default_figure_width=600,
             default_figure_height=600
         )
+        self._options.layout.margin="1em 0 3em 0"
     
     def init(self, **kwargs):
         #replacing some wordings
@@ -31,11 +30,14 @@ class SunburstForm(PaletteFigureForm):
             
             self._figure=go.FigureWidget(fig)
             self._show_interface()
+            print(self.df.Category.unique())
+            print(self._figure.data[0].values)
         else : 
             self.children = [self._output]
             with self._output:
                 clear_output()
                 print("No category -> no sunburst plot")
+        
                 
     def break_columns(self, df, max_length = 16):
         categories = []
@@ -55,17 +57,25 @@ class SunburstForm(PaletteFigureForm):
         return df.copy()
     
     def _change_color_palette(self, palette):
-        # TODO: color palette isn't in the right order
-        # should stay coherent default palette order
+        categories = self.df.Category.unique()
+        # Les tranches du sunburst sont triées par valeur de chaque label
+        # donc on est obligés de trier les catégories par ordre décroissant
+        # pour leur associer la bonne couleur
+        cats = [
+            cat for _, cat in sorted(
+                zip(self._figure.data[0].values[-len(categories):], self._figure.data[0].labels[-len(categories):]), key=lambda pair: pair[0], reverse=True
+            )
+        ]
         palette = common._palettes.get(palette["new"])
         c = cycle(palette)
-        categories = self.df.Category.unique().tolist()
-        cols = {}
-        for cat in categories:
-            cols[cat] = next(c)
+        cols = dict(zip(cats, c))
+        
         colors = []
+        # Ici on attribue la couleur de la catégorie à chaque tranche du sunburst
         for label in self._figure.data[0].labels:
+            # On récupère la catégorie de la tranche
             df = self.df[self.df.isin([label]).any(axis=1)]
+            # On attribue la couleur de la catégorie à la tranche
             colors.append(cols[df.Category.unique()[0]])
-            # print(df)
+            
         self._figure.update_traces(marker_colors=colors)

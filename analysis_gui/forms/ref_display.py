@@ -4,14 +4,15 @@ from .figure_form import Form
 
 class RefDisplayUI(Form):
     def __init__(self):
-        super().__init__(output=Output(width="fit-content"),
-                        layout=Layout(
-                            width="max-content",
-                            grid_gap="10px",
-                            align_items="flex-start",
-                            overflow="visible"
-                            )
-                        )
+        super().__init__(
+            output=Output(width="fit-content"),
+            layout=Layout(
+                width="max-content",
+                grid_gap="10px",
+                align_items="flex-start",
+                overflow="visible"
+            )
+        )
     def init(self, **kwargs):
         args = self._parse_kwargs("df", "references", **kwargs)
         df, references = args["df"], args["references"]

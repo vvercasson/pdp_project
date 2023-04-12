@@ -1,5 +1,4 @@
 from .common import *
-from . import common
 from .figure_form import Form
 
 class AverageJaccardIndex(Form):
