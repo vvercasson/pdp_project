@@ -24,8 +24,8 @@ class NumSymCat(TableForm):
                 cat_per_questionnaire = pd.DataFrame(np.zeros((self._df.shape[1]-5,len(self._df.Category.unique()))), index = self._df.iloc[:,4:-1].columns, columns = self._df.sort_values(by="Ab").Category.unique())
                 for category in self._df.Category.unique():
                     cat_per_questionnaire.loc[:,category] = (self._df[self._df.Category==category].iloc[:,4:-1]>=1).sum(axis = 0)
-                self._generated_frame = cat_per_questionnaire
-                display(cat_per_questionnaire.T)
+                self._generated_frame = cat_per_questionnaire.T
+                display(self._generated_frame)
             else : 
                 print('No category in this dataframe !')
 
