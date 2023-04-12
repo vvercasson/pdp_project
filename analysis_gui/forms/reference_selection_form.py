@@ -35,6 +35,8 @@ class ReferenceSelectionForm(Form):
             layout=Layout(grid_template_columns="repeat(3, 33%)")
         )
         
+        self._loading = Image(value=loading_gif, layout=Layout(width="1.5em", height="1.5em", visibility="hidden"))
+        
         self.buttonGenerate.on_click(self.generateFigures)
         self.wantReferences.observe(self.on_wantReferences_change, names='value')
     
@@ -55,7 +57,7 @@ class ReferenceSelectionForm(Form):
                 layout=Layout(justify_content="flex-start", grid_gap="5px", width="match-content")
             ),
             HBox(
-                children=[self.buttonGenerate],
+                children=[self.buttonGenerate, self._loading],
                 layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
             ),
             self._output
@@ -93,7 +95,9 @@ class ReferenceSelectionForm(Form):
         self.df['sum_symptoms'] = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
         self.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
         with self._output:
-            clear_output()
+            clear_output(wait=True)
             display(self.df)
-            
+        self._loading.layout.visibility = "visible"
         self.executeNext(df=self.df, references=self.references, col=col)
+        self._loading.layout.visibility = "hidden"
+        

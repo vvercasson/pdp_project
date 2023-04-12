@@ -11,11 +11,8 @@ class Saveable():
         self._save_button.on_click(self._save)
 
     def _create_save_interface(self, placeholder, tooltip):
-        self._dialog = Output()
-        self._dialog.layout.width = '100%'
-        with open("resources/loading.gif", 'rb') as img:
-            gif = img.read()
-        self._loading = Image(value=gif, layout=Layout(width="15px", height="15px", visibility="hidden"))
+        self._save_dialog = Output()
+        self._loading = Image(value=loading_gif, layout=Layout(width="15px", height="15px", visibility="hidden"))
         
         # Save Figure Option
         self._save_button = Button(
@@ -31,7 +28,7 @@ class Saveable():
         )
         
         save_widget = HBox(
-            children=[self._fileName, self._save_button, self._loading, self._dialog],
+            children=[self._fileName, self._save_button, self._loading, self._save_dialog],
             layout=Layout(
                 width="match-content",
                 justify_content="flex-start",
@@ -43,7 +40,8 @@ class Saveable():
         self._save_interface = Tab(
             children=[save_widget],
             layout=Layout(
-                justify_content="flex-start"
+                justify_content="flex-start",
+                width="auto"
             )
         )
         

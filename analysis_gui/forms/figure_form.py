@@ -75,7 +75,7 @@ class FigureForm(Form, Exportable):
         self._font_size.observe(self._update_font_size, names=["value"]) # type: ignore
 
     def _show_interface(self, other=[]):
-        self._dialog.clear_output()            
+        self._save_dialog.clear_output()            
         Exportable._show_interface(self, other + [self._options] + [self._figure])
     
     def _update_size_height(self, height):
@@ -138,6 +138,6 @@ class FigureForm(Form, Exportable):
                 mime = "image" if extension != "pdf" else "application"
                 fileuri = f"data:{mime}/{extension};base64,{image}"
             html, js = self._get_save_dialog(message, header, headerclass, filename, fileuri) # type: ignore
-            with self._dialog:
+            with self._save_dialog:
                 clear_output(wait=True)
                 display(HTML(html), Javascript(js))

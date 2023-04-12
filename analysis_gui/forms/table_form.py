@@ -45,7 +45,7 @@ class TableForm(Form, Saveable):
             mime = common.mime_types[extension]
             fileuri = f"data:{mime};base64,{file}"
         html, js = self._get_save_dialog(message, header, headerclass, filename, fileuri) # type: ignore
-        with self._dialog:
+        with self._save_dialog:
             clear_output()
             display(HTML(html))
             display(Javascript(js))

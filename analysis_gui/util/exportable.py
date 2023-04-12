@@ -13,12 +13,14 @@ class Exportable(Saveable):
         Exportable._set_event_handlers(self)  
     
     def _create_save_interface(self):
+        self._export_dialog = Output()
         # ChartStudio Export Option
         self._exportCSbutton = Button(
             description="Export to Chart Studio",
             tooltip="Export the figure to Chart Studio",
             icon="cloud-upload",
-            disabled=True
+            disabled=True,
+            layout=Layout(width="max-content")
         )
         self._CSfilename = Text(
             placeholder="Chart Studio figure name",
@@ -26,7 +28,7 @@ class Exportable(Saveable):
             tooltip="The name of the figure in Chart Studio"
         )
         self._export_widget = HBox(
-            children=[self._CSfilename, self._exportCSbutton, self._loading],
+            children=[self._CSfilename, self._exportCSbutton, self._export_dialog, self._loading],
             layout=Layout(
                 width="fit-content",
                 justify_content="flex-start",
@@ -45,16 +47,28 @@ class Exportable(Saveable):
         self._save_interface.set_title(1, "Export")
     
     def _export(self, to_export):
+        header = "Export Failed"
+        headerclass = "failure"
+        self._loading.layout.visibility = "visible"
         try:
-            py.plot(to_export, filename=self._CSfilename.value, auto_open=True, sharing='public')
+            url = py.plot(to_export, filename=self._CSfilename.value, auto_open=True, sharing='public')
+            message = f"Successfully exported to Chart Studio, link : <a href=\"{url}\" target=\"_blank\">{url}</a>"
+            header = "Export Successful"
+            headerclass = "success"
         except PlotlyRequestError as e:
-            pass
+            message = f"Export to Chart Studio failed, error: {e}"
+        finally:
+            self._loading.layout.visibility = "hidden"
+        html,js = get_dialog(message, header, headerclass)
+        with self._export_dialog:
+            clear_output()
+            display(HTML(html), Javascript(js))
     
-    def _show_interface(self, other=...):
+    def _show_interface(self, other=[]):
         self._CSfilename.value = ''
         if cs.tools.get_credentials_file().get("api_key"):
             self._add_export()
-        return super()._show_interface(other)
+        super()._show_interface(other)
     
     def _get_export_dialog(self, message, header, headerclass, dialog_type='export', extrajs=''):
         return get_dialog(message, header, headerclass, dialog_type, extrajs)

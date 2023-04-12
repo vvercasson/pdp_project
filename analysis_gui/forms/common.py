@@ -33,3 +33,6 @@ mime_types = {
     "xlsx": TYPE_XLSX,
     "csv": "text/csv"
 }
+
+with open("resources/loading.gif", 'rb') as img:
+    loading_gif = img.read()

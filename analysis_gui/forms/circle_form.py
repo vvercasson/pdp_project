@@ -38,14 +38,8 @@ class CircleForm(PaletteFigureForm):
         self._df = args["df"]
         self._col = args["col"]
         self._init_circle()
-        children=[
-            HBox(
-                children=[self._max_radius],
-                layout=Layout(justify_content="flex-start", grid_gap="5px", width="100%")
-            )
-        ]
         
-        self._show_interface(children)
+        self._show_interface([self._max_radius])
         
     def _update_radius(self, radius):
         self._figure.update_layout(
