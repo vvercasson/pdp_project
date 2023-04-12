@@ -2,12 +2,14 @@ header = ['Category','Subcategory', 'Ab', 'Symptom']
 
 import pandas as pd
 import numpy as np
+import os, base64
+
 
 from ipywidgets import Layout, FileUpload, Button, \
     VBox, HBox, TwoByTwoLayout, Dropdown, Output, interactive_output, \
     Text, Image, Label, HTML, IntSlider
     
-from IPython.display import display, clear_output
+from IPython.display import display, clear_output, Javascript
 from itertools import cycle
 
 import io, inspect
@@ -22,3 +24,12 @@ def filter_palettes(pair):
 
 melt_output=Output()
 _palettes = dict(filter(filter_palettes, px.colors.qualitative.__dict__.items()))
+
+TYPE_XSL = "application/vnd.ms-excel"
+TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+
+mime_types = {
+    "xls": TYPE_XSL,
+    "xlsx": TYPE_XLSX,
+    "csv": "text/csv"
+}

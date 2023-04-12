@@ -1,9 +1,7 @@
-from .form import Form
+from .table_form import TableForm
 from .common import *
-from . import common
 
-class NumSymptomsUI(Form):
-    
+class NumSymptomsUI(TableForm):
     def __init__(self):
         super().__init__(
             output=Output(width="fit-content"),
@@ -15,18 +13,15 @@ class NumSymptomsUI(Form):
             )
         )
         
-        
     def init(self, **kwargs):
         
-        args = self._parse_kwargs("df", **kwargs)
-        df = args["df"]
+        super().init(**kwargs)
         # Computing sum of symptoms in DataFrame
-        sympt_per_questionnaire = pd.DataFrame(np.zeros((df.shape[1]-5,3)), index = df.iloc[:,4:-1].columns, columns = ['Specific symptoms', 'Compound symptoms', 'Total'])
-        sympt_per_questionnaire['Specific symptoms'] = (df.iloc[:,4:-1]==1).sum(axis = 0)
-        sympt_per_questionnaire['Compound symptoms'] = (df.iloc[:,4:-1]==2).sum(axis = 0)
-        sympt_per_questionnaire['Total'] = (df.iloc[:,4:-1]>=1).sum(axis = 0)
+        sympt_per_questionnaire = pd.DataFrame(np.zeros((self._df.shape[1]-5,3)), index = self._df.iloc[:,4:-1].columns, columns = ['Specific symptoms', 'Compound symptoms', 'Total'])
+        sympt_per_questionnaire['Specific symptoms'] = (self._df.iloc[:,4:-1]==1).sum(axis = 0)
+        sympt_per_questionnaire['Compound symptoms'] = (self._df.iloc[:,4:-1]==2).sum(axis = 0)
+        sympt_per_questionnaire['Total'] = (self._df.iloc[:,4:-1]>=1).sum(axis = 0)
         
-        self.children = [self._output]
         
         with self._output:
             clear_output()

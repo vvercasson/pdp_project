@@ -1,7 +1,7 @@
 from .common import *
-from .figure_form import Form
+from .table_form import TableForm
 
-class AverageJaccardIndex(Form):
+class AverageJaccardIndex(TableForm):
     def __init__(self):
         super().__init__(
             output=Output(width="fit-content"),
@@ -14,12 +14,12 @@ class AverageJaccardIndex(Form):
         )
         
     def init(self, **kwargs):
-        self.children = [self._output]
-        args = self._parse_kwargs("df", "jaccard_table", "references", **kwargs)
-        df, jaccard_table, references = args["df"], args["jaccard_table"], args["references"]
+        super().init(**kwargs)
+        args = self._parse_kwargs("jaccard_table", "references", **kwargs)
+        jaccard_table, references = args["jaccard_table"], args["references"]
         
-        jaccard = pd.DataFrame(np.zeros((len(df.drop(header+['sum_symptoms'],axis = 1).columns),1)), index = df.drop(header+['sum_symptoms'],axis = 1).columns, columns=['Avg. Jaccard Index'])
-        for questionnaire in df.drop(header+['sum_symptoms'], axis=1).columns : 
+        jaccard = pd.DataFrame(np.zeros((len(self._df.drop(header+['sum_symptoms'],axis = 1).columns),1)), index = self._df.drop(header+['sum_symptoms'],axis = 1).columns, columns=['Avg. Jaccard Index'])
+        for questionnaire in self._df.drop(header+['sum_symptoms'], axis=1).columns : 
             jaccard.loc[questionnaire, 'Avg. Jaccard Index'] = jaccard_table.drop(references+[questionnaire], axis = 1).loc[questionnaire, :].mean()
         # display(jaccard)
         # jaccard.to_excel("table4_jaccard_average_questionnaires.xlsx")

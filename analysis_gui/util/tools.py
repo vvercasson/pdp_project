@@ -1,3 +1,7 @@
+from io import BytesIO
+import pandas as pd
+import os
+
 def get_dialog(message, header, headerclass, dialog_type='generic', extrajs=''):
     if (headerclass != 'success' and headerclass != "failure"):
         raise ValueError("headerclass must be either 'success' or 'failure'")
@@ -104,3 +108,21 @@ def get_dialog(message, header, headerclass, dialog_type='generic', extrajs=''):
     '''
     
     return html, js
+
+def save_dataframe(df, extension):
+    """
+    Saves a dataframe to a BytesIO object.
+    """
+    file = BytesIO()
+    if extension == '':
+        raise ValueError("filename cannot be empty")
+    if extension == 'csv':
+        df.to_csv(file, index=False)
+    elif extension == 'xlsx' or extension == 'xls':
+        writer = pd.ExcelWriter('temp.' + extension) # type: ignore
+        df.to_excel(writer, index=False, engine=extension + 'writer')
+        writer.book.save(file)
+        os.remove('temp.' + extension)
+    else:
+        raise ValueError(f"Unsupported file type: {extension}")
+    return file

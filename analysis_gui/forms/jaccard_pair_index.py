@@ -1,10 +1,10 @@
 from .common import *
 from . import common
-from .figure_form import Form
+from .table_form import TableForm
 from sklearn.metrics import jaccard_score
 
-class JaccardPairIndex(Form):
-    def __init__(self, type: str):
+class JaccardPairIndex(TableForm):
+    def __init__(self, ptype: str):
         super().__init__(
             output=Output(width="fit-content"),
             layout=Layout(
@@ -14,22 +14,19 @@ class JaccardPairIndex(Form):
                 overflow="visible"
             )
         )
-        self.type = type
+        self.type = ptype
         
     def init(self, **kwargs):
-        self.children = [self._output]
-        args = self._parse_kwargs("df", **kwargs)
-        df = args["df"]
-        
-        if df.shape[0] != df[self.type].isnull().sum() : 
+        super().init(**kwargs)
+        if self._df.shape[0] != self._df[self.type].isnull().sum() : 
             res = pd.DataFrame(
-                np.zeros((len(df[self.type].unique()),1)),
-                index = df.sort_values(by="Ab")[self.type].unique(),
+                np.zeros((len(self._df[self.type].unique()),1)),
+                index = self._df.sort_values(by="Ab")[self.type].unique(),
                 columns=['Avg. Jaccard Index']
             )
             
-            for category in df[self.type].unique() : 
-                df_category = df.drop(common.header+['sum_symptoms'],axis = 1)[df[self.type]==category]
+            for category in self._df[self.type].unique() : 
+                df_category = self._df.drop(common.header+['sum_symptoms'],axis = 1)[self._df[self.type]==category]
                 df_category = df_category.iloc[:,(df_category.sum(axis = 0)!=0.0).to_numpy()] # we keep only the questionnaire with at least 1 symptom
                 liste_avg = []
                 
@@ -46,8 +43,6 @@ class JaccardPairIndex(Form):
             with self._output:
                 clear_output()
                 display(res)
-                
-            res.to_excel("table5_jaccard_"+ self.type.lower() +"s.xlsx")
         else: 
             with self._output:
                 clear_output()

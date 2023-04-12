@@ -94,6 +94,6 @@ class ReferenceSelectionForm(Form):
         self.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
         with self._output:
             clear_output()
-            display(self.df.head())
+            display(self.df)
             
         self.executeNext(df=self.df, references=self.references, col=col)

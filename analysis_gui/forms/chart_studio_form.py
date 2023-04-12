@@ -90,7 +90,7 @@ class ChartStudioForm(Form):
                 display(HTML(html), Javascript(js))
             self.executeNext()
         else :
-            html, js = get_dialog("Please check your credentials", "Login failed", "failure")
+            html, js = get_dialog("Failed to connect to your account, check your credentials", "Login failed", "failure")
             with self._output:
                 clear_output(wait=True)
                 display(HTML(html), Javascript(js))

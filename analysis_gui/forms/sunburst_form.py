@@ -30,8 +30,6 @@ class SunburstForm(PaletteFigureForm):
             
             self._figure=go.FigureWidget(fig)
             self._show_interface()
-            print(self.df.Category.unique())
-            print(self._figure.data[0].values)
         else : 
             self.children = [self._output]
             with self._output:

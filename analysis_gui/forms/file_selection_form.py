@@ -3,8 +3,6 @@ from .form import Form
 from ..forms import common
 
 class FileSelectionForm(Form):
-    TYPE_XSL = "application/vnd.ms-excel"
-    TYPE_XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     
     def __init__(self): 
         super().__init__(
@@ -64,7 +62,7 @@ class FileSelectionForm(Form):
             
     def _onFileUpload(self, change):
         files = change["new"]
-        if len(files) > 0 and (files[0].type == FileSelectionForm.TYPE_XLSX or files[0].type == FileSelectionForm.TYPE_XSL):
+        if len(files) > 0 and (files[0].type == common.TYPE_XLSX or files[0].type == common.TYPE_XSL):
             # print(files[0].type)
             self.confirm.disabled = False
     
@@ -87,6 +85,7 @@ class FileSelectionForm(Form):
         df.sort_values(by="Ab",inplace = True) # sort the dataset by abbreviation
         
         with self._output:
-            clear_output()
+            clear_output(wait=True)
+            print("Dataset loaded !\n5 first rows :")
             display(df.head()) # print the 5 first rows
         self.executeNext(df=df, references=references)
