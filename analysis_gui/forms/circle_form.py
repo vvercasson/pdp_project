@@ -17,9 +17,11 @@ class CircleForm(PaletteFigureForm):
             default_figure_width=600,
             default_font_size=10
         )
+        self._default_min_radius = 6
+        self._default_max_radius = 20
         
         self._max_radius = IntSlider(
-            value=20,
+            value=self._default_max_radius,
             min=6,
             max=50,
             step=1,
@@ -30,22 +32,42 @@ class CircleForm(PaletteFigureForm):
             readout=True,
             readout_format='d'
         )
+        
+        self._min_radius = IntSlider(
+            value=self._default_min_radius,
+            min=1,
+            max=25,
+            step=1,
+            description='Min Radius :',
+            disabled=False,
+            continuous_update=True,
+            orientation='horizontal',
+            readout=True,
+            readout_format='d'
+        )
 
     def init(self, **kwargs):
         if self._figure is None:
             self._max_radius.observe(self._update_radius, names=["value"])
+            self._min_radius.observe(self._update_min_radius, names=["value"])
         args = self._parse_kwargs("df", "col", **kwargs)
         self._df = args["df"]
         self._col = args["col"]
         self._init_circle()
         
-        self._show_interface([self._max_radius])
+        self._show_interface([self._max_radius, self._min_radius])
         
     def _update_radius(self, radius):
         self._figure.update_layout(
             polar = dict(
                 radialaxis=dict(range=[0, radius["new"]])
             )
+        )
+        
+    def _update_min_radius(self, radius):
+        self._figure.update_traces(
+            selector=dict(name="min_rad"),
+            r=[radius["new"] for k in range (len(self._df.Ab))]
         )
         
     def _update_font_size(self, size):
@@ -98,13 +120,17 @@ class CircleForm(PaletteFigureForm):
                     )
                 )
 
+    def _reset_options(self, _):
+        super()._reset_options(_)
+        self._max_radius.value = self._default_max_radius
+        self._min_radius.value = self._default_min_radius
 
     def _init_circle(self):
         df_col = self._df.melt(id_vars=['Category','Subcategory','Ab', 'Symptom'], value_vars=self._col).copy()
         with melt_output:
             clear_output()
             display(df_col.head())
-        min_radius = self._max_radius.min
+        min_radius = self._min_radius.value
 
         # dictionnary questionnaire <->  radius of the circles
         dic = {}
@@ -168,7 +194,7 @@ class CircleForm(PaletteFigureForm):
             self._figure.add_trace(
                 go.Scatterpolar(
                     r = [dic[scale] for k in range(temp.shape[0])], # constant radius corresponding to the dictionnary value
-                    theta = temp.Ab,  # angle = symptom 
+                    theta = temp.Ab,  # angle = symptom
                     mode = 'markers',
                     hoverinfo="text",
                     hovertext= "Scale: "+scale+"<br>"+"Sympt.:"+temp.Symptom + "<br>Compound"+"<br>Category: "+temp.Category, # \n is <br> (html)
@@ -190,7 +216,9 @@ class CircleForm(PaletteFigureForm):
             r=[min_radius for k in range (len(self._df.Ab))], # radius of the circle = min_radius (set before)
             theta=self._df.Ab, # all angles
             fill='toself',
+            name="min_rad",
             fillcolor = "white", # color of the circle
+            hoverinfo='none',
             showlegend = False, # no legend
             line=dict(
                     color="white",
