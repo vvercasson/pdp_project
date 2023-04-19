@@ -21,9 +21,7 @@ class AverageJaccardIndex(TableForm):
         jaccard = pd.DataFrame(np.zeros((len(self._df.drop(header+['sum_symptoms'],axis = 1).columns),1)), index = self._df.drop(header+['sum_symptoms'],axis = 1).columns, columns=['Avg. Jaccard Index'])
         for questionnaire in self._df.drop(header+['sum_symptoms'], axis=1).columns : 
             jaccard.loc[questionnaire, 'Avg. Jaccard Index'] = jaccard_table.drop(references+[questionnaire], axis = 1).loc[questionnaire, :].mean()
-        # display(jaccard)
-        # jaccard.to_excel("table4_jaccard_average_questionnaires.xlsx")
-        # print("Average Jaccard index (wo references): "+str(np.round(float(jaccard.mean()),5)) +" (sd: "+str(np.round(float(jaccard.std()),4))+ ")" )
+
         self._generated_frame = jaccard
         with self._output:
             clear_output(wait=True)

@@ -33,9 +33,11 @@ class HistogramUI(PaletteFigureForm):
         
         self._df_questionnaires = df.drop(references, axis = 1).sort_values(by=['sum_symptoms', 'Ab'], ascending=[False,True])
         if df.shape[0] != df['Category'].isnull().sum(): 
-            self._color = 'Category'
+            color = 'Category'
+            self._sortBy.disabled = False
+            self._colorPicker.disabled = False
         else: 
-            self._color = 'sum_symptoms'
+            color = 'sum_symptoms'
             self._sortBy.disabled = True
             self._colorPicker.disabled = True
             
@@ -43,9 +45,9 @@ class HistogramUI(PaletteFigureForm):
             self._df_questionnaires,
             x='Symptom',
             y='sum_symptoms',
-            color=self._color,
+            color=color,
             labels={'sum_symptoms':'Number of questionnaires'},
-            color_discrete_sequence=common._palettes.get(self._colorPicker.value),
+            color_discrete_sequence=common._palettes.get(self._default_palette),
             category_orders = {'Category':self._df_questionnaires.sort_values(by='Ab').Category.unique()}
         )
         
@@ -56,8 +58,10 @@ class HistogramUI(PaletteFigureForm):
         self._show_interface([self._sortBy])
         
     def _sort_by(self, sortBy):
-        # print(sortBy["new"])
-        self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': self._df_questionnaires[sortBy["new"]].unique()})
+        order = self._df_questionnaires[sortBy["new"]].unique()
+        if sortBy["new"] == 'Category':
+            order = np.setdiff1d(order, self._df_questionnaires['Symptom'].unique())
+        self._figure.update_layout(xaxis={'categoryorder':'array', 'categoryarray': order})
         
     def _change_color_palette(self, palette):
         # print(self._figure.data)

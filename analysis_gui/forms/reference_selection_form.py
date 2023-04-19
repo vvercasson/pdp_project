@@ -72,7 +72,6 @@ class ReferenceSelectionForm(Form):
     
     def on_wantReferences_change(self, change):
         if change['new'] == 'No':
-            self.references = []
             self.children = [self.wantReferences, self.buttonGenerate, self._output]
         else:
             self._output.clear_output()
@@ -84,20 +83,21 @@ class ReferenceSelectionForm(Form):
         for i in self.checkBoxes:
             if i.value and not i.description in self.references:
                 selected_options.append(i.description)
-        self.references.extend(selected_options)
-        
+    
         sums = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 0) # sum of the number of symptom by questionnaire
         col = list(sums.sort_values(ascending=False).index.to_numpy()) #we create the list of columns
         col = common.header + col
+        
         # we apply the order of columns to the dataset
-        self.df = self.df.loc[:, col]
-        self._output.clear_output(wait=True)
-        self.df['sum_symptoms'] = (self.df.drop(common.header,axis = 1)>=1).sum(axis = 1)
-        self.df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
+        df = self.df.loc[:, col]
+        df['sum_symptoms'] = (df.drop(common.header, axis = 1)>=1).sum(axis = 1)
+        df.sort_values(by=['sum_symptoms','Ab'], ascending = [False,True], inplace = True)
+        
         with self._output:
             clear_output(wait=True)
-            display(self.df)
+            display(df)
+            
         self._loading.layout.visibility = "visible"
-        self.executeNext(df=self.df, references=self.references, col=col)
+        self.executeNext(df=df, references=self.references + selected_options, col=col)
         self._loading.layout.visibility = "hidden"
         

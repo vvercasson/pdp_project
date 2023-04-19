@@ -6,7 +6,7 @@ import os, base64
 
 
 from ipywidgets import Layout, FileUpload, Button, \
-    VBox, HBox, TwoByTwoLayout, Dropdown, Output, interactive_output, \
+    VBox, HBox, TwoByTwoLayout, Dropdown, Output, \
     Text, Image, Label, HTML, IntSlider
     
 from IPython.display import display, clear_output, Javascript

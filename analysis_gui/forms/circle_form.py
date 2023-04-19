@@ -1,6 +1,7 @@
 from analysis_gui.forms.palette_figure_form import PaletteFigureForm
 from .common import *
 import analysis_gui.forms.common as common
+from ipywidgets import FloatSlider
 
 class CircleForm(PaletteFigureForm):
     
@@ -33,17 +34,17 @@ class CircleForm(PaletteFigureForm):
             readout_format='d'
         )
         
-        self._min_radius = IntSlider(
+        self._min_radius = FloatSlider(
             value=self._default_min_radius,
             min=1,
             max=25,
-            step=1,
+            step=0.2,
             description='Min Radius :',
             disabled=False,
             continuous_update=True,
             orientation='horizontal',
             readout=True,
-            readout_format='d'
+            readout_format='.1f',
         )
 
     def init(self, **kwargs):
