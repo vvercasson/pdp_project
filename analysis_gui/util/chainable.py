@@ -2,7 +2,6 @@ class Chainable():
     
     def __init__(self) -> None:
         self.nextLinks = []
-        pass
     
     def chain(self, any):
         self.nextLinks.append(any)
@@ -15,6 +14,5 @@ class Chainable():
             try:
                 method = getattr(link, function)
             except Exception as e:
-                # print(e)
                 continue
             method(**kwargs)

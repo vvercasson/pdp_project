@@ -1,5 +1,4 @@
 from .common import *
-from analysis_gui.forms import common
 from ..util.chainable import Chainable
 
 class Form(VBox, Chainable):
