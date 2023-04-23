@@ -29,13 +29,9 @@ class PaletteFigureForm(FigureForm):
         
     def _change_color_palette(self, palette):
         # print(self._figure.data)
-        t1 = time.time()
         colors = cycle(common._palettes.get(palette["new"]))
         for component in self._figure.data:
-            component.update(marker={'color' : next(colors)})
-        t2 = time.time()
-        print(f"Time to change color palette: {t2-t1} seconds")
-            
+            component.update(marker={'color' : next(colors)})            
             
     def _reset_options(self, _):
         self._colorPicker.value = self._default_palette

@@ -29,5 +29,5 @@ class JaccardTable(TableForm):
             display(jaccard_table)
             
         kwargs["jaccard_table"] = jaccard_table
-        print(jaccard_table)
+        # print(jaccard_table)
         self.executeNext(**kwargs)

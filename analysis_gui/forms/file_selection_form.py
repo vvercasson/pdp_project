@@ -63,8 +63,10 @@ class FileSelectionForm(Form):
     def _onFileUpload(self, change):
         files = change["new"]
         if len(files) > 0 and (files[0].type == common.TYPE_XLSX or files[0].type == common.TYPE_XSL):
-            # print(files[0].type)
             self.confirm.disabled = False
+        else:
+            self.confirm.disabled = True
+            
     
     def confirmForm(self, _):
         experiment = self.dropdown.value
@@ -78,8 +80,13 @@ class FileSelectionForm(Form):
         elif experiment=="Gauld2023_OSAS_content_analysis" : 
             df = pd.read_excel("./data/gauld2023_OSAS_data_processed.xlsx")
         else :
-            file = self.filepicker.value[0].content
-            df = pd.read_excel(io.BytesIO(file))
+            file = self.filepicker.value[0]
+            if file.type != common.TYPE_XLSX and file.type != common.TYPE_XSL:
+                with self._output:
+                    clear_output(wait=True)
+                    print("The file you uploaded is not a .xlsx or .xsl file !")
+                return
+            df = pd.read_excel(io.BytesIO(file.content))
 
         df.rename(columns={df.columns[0]: "Category",df.columns[1]: "Subcategory", df.columns[2]: "Ab", df.columns[3]: "Symptom"}, inplace=True) #replacing the name of the three first columns !
         df.sort_values(by="Ab",inplace = True) # sort the dataset by abbreviation
