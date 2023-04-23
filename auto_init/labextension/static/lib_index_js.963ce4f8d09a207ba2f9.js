@@ -109,11 +109,12 @@ class VisibilityManager {
                 const code = cell;
                 const metadata = code.model.metadata;
                 isVisible = !metadata.has(SHOW_META) || metadata.get(SHOW_META);
-                hideCodeCells(this.tracker, this);
                 break;
             }
         }
         this.update(notebook, isVisible);
+        if (!isVisible)
+            hideCodeCells(this.tracker, this);
     }
     update(notebook, state) {
         this.states.set(notebook.id, state);
@@ -197,4 +198,4 @@ const plugin = {
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.8229cc0d24f83c628540.js.map
+//# sourceMappingURL=lib_index_js.963ce4f8d09a207ba2f9.js.map
