@@ -115,12 +115,12 @@ def save_dataframe(df, extension):
     """
     file = BytesIO()
     if extension == '':
-        raise ValueError("filename cannot be empty")
+        raise ValueError("File extension is needed (.xlsx, ...)")
     if extension == 'csv':
         df.to_csv(file)
     elif extension == 'xlsx' or extension == 'xls':
         writer = pd.ExcelWriter('temp.' + extension) # type: ignore
-        df.to_excel(writer, engine=extension + 'writer')
+        df.to_excel(writer)
         writer.book.save(file)
         os.remove('temp.' + extension)
     else:
